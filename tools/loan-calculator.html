@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Loan, Mortgage &amp; Freelancer Tax Calculators — ToolNest</title>
+<meta name="description" content="Calculate loan payments, mortgage estimates and freelancer tax set-asides in seconds. Educational estimates only — not financial advice. Free, no sign-up.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Business &amp; Money</p>
+<h1>Loan / Mortgage / Tax Calculators</h1>
+<p class="desc">Three calculators in one place. All maths runs in your browser.</p><figure><img src="../assets/img/money.svg" alt="Loan / Mortgage / Tax Calculators — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Loan / Mortgage / Tax Calculators — illustration</figcaption></figure>
+<div class="disc"><strong>Important:</strong> These are educational estimates only — not financial advice. Tax rules and rates differ by country and change often. Check your local rules or a qualified accountant before making money decisions.</div>
+<div class="toolbox">
+<h2>Loan calculator</h2>
+<label>Loan amount</label><input id="l-principal" type="number" placeholder="e.g. 10000">
+<label>Annual interest rate (%)</label><input id="l-rate" type="number" step="0.1" placeholder="e.g. 8">
+<label>Years</label><input id="l-years" type="number" placeholder="e.g. 5">
+<button class="btn" onclick="calcLoan()">Calculate loan</button>
+<div class="output" id="l-out"></div>
+<h2>Mortgage estimator</h2>
+<label>Home price</label><input id="m-price" type="number" placeholder="e.g. 250000">
+<label>Down payment (%)</label><input id="m-down" type="number" placeholder="e.g. 20">
+<label>Annual interest rate (%)</label><input id="m-rate" type="number" step="0.1" placeholder="e.g. 6.5">
+<label>Years</label><input id="m-years" type="number" placeholder="e.g. 30">
+<button class="btn" onclick="calcMortgage()">Calculate mortgage</button>
+<div class="output" id="m-out"></div>
+<h2>Freelancer tax estimator</h2>
+<label>Annual income</label><input id="t-income" type="number" placeholder="e.g. 30000">
+<label>Business expenses</label><input id="t-exp" type="number" placeholder="e.g. 5000">
+<label>Your estimated tax rate (%) — check your local rate</label><input id="t-rate" type="number" placeholder="e.g. 20">
+<button class="btn" onclick="calcTax()">Estimate tax</button>
+<div class="output" id="t-out"></div>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Monthly payment is not the whole cost.</strong> Always look at total interest too — a longer loan feels cheaper monthly and costs far more overall.</li>
+<li><strong>For a mortgage, add the extras.</strong> Taxes, insurance and maintenance sit on top of principal and interest. Budget for them before you fall in love with a house.</li>
+<li><strong>Freelancers: set tax aside every time you are paid.</strong> The monthly set-aside number above is your habit — move it to a separate account on payday, not at year end.</li>
+<li><strong>Expenses lower taxable income.</strong> Keep receipts for real business costs (software, internet share, equipment). Guesswork at tax time costs money.</li>
+<li><strong>Compare at least two scenarios.</strong> Change the rate or the years by a little and watch the total — small changes compound into big differences.</li>
+<li><strong>Rates change.</strong> If a rate looks old or your country changed its rules, the estimate is only as good as the number you typed in.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Round your monthly set-aside UP — a small buffer beats a shortfall.</li>
+<li>For loans, ask the lender for the total cost in writing, then compare it with this calculator.</li>
+<li>Review your tax rate once a year; using last year's rate is the most common freelancer mistake.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Are these numbers exact?</summary><p>No. They are estimates from the numbers you enter, using standard payment maths. Real loans add fees, and real tax depends on your country's full rules.</p></details>
+<details><summary>Which tax rate should I enter?</summary><p>Your local effective rate for your income band — not the headline rate. If you are unsure, a local accountant's one-hour answer is worth more than any calculator.</p></details>
+<details><summary>Why is there no country selector?</summary><p>Because rates and rules change too fast to hard-code honestly. Entering your own rate keeps the estimate honest instead of silently wrong.</p></details>
+<details><summary>Does the mortgage include taxes and insurance?</summary><p>No — it shows principal and interest only, so you can see the loan clearly. Add your local tax and insurance on top for the full monthly cost.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Finance content has some of the highest advertising value online, and calculators are the pages people return to. For freelancers, the tax estimator habit itself is money: setting money aside monthly avoids the year-end panic that pushes people into debt. Bookkeeping help and simple finance guides are services small businesses pay for — this calculator is the honest first step toward offering them.</p>
+<a class="cta" href="https://aa-digital-network-website.pages.dev">Want bookkeeping help done for you? See services →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="freelance-rate.html"><h3>Freelance Rate Calculator</h3><p>Set a rate that already covers tax.</p></a>
+<a class="card" href="invoice-generator.html"><h3>Invoice Generator</h3><p>Get paid properly for the work.</p></a>
+<a class="card" href="real-estate.html"><h3>Real Estate Listing Generator</h3><p>For the property side of money.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

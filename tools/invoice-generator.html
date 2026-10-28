@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Invoice Generator for Freelancers — ToolNest</title>
+<meta name="description" content="Create a clean, professional invoice in minutes: add items, set tax, print or save as PDF. Free, no sign-up, runs in your browser.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Business &amp; Money</p>
+<h1>Invoice Generator</h1>
+<p class="desc">Add your business, your client and your items — get a clean invoice you can print or save as PDF. Nothing leaves your browser.</p><figure><img src="../assets/img/money.svg" alt="Invoice Generator — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Invoice Generator — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Your business</label><input id="i-from" placeholder="e.g. Bright Web Studio">
+<label>Client</label><input id="i-to" placeholder="e.g. Northwind Traders">
+<label>Invoice number</label><input id="i-num" placeholder="INV-001">
+<label>Date</label><input id="i-date" type="date">
+<label>Tax rate (%)</label><input id="i-tax" type="number" placeholder="e.g. 0">
+<h3>Items</h3>
+<div id="inv-rows">
+<div class="inv-row"><label>Description</label><input class="inv-desc" placeholder="e.g. Website homepage design"><label>Quantity</label><input class="inv-qty" type="number" placeholder="1"><label>Price</label><input class="inv-price" type="number" placeholder="250"></div>
+<div class="inv-row"><label>Description</label><input class="inv-desc" placeholder="e.g. Contact page"><label>Quantity</label><input class="inv-qty" type="number" placeholder="1"><label>Price</label><input class="inv-price" type="number" placeholder="100"></div>
+<div class="inv-row"><label>Description</label><input class="inv-desc" placeholder="Optional item"><label>Quantity</label><input class="inv-qty" type="number" placeholder="0"><label>Price</label><input class="inv-price" type="number" placeholder="0"></div>
+</div>
+<button class="btn secondary no-print" onclick="addInvRow()">+ Add item</button>
+<button class="btn" onclick="buildInvoice()">Generate invoice</button>
+<button class="btn secondary no-print" onclick="window.print()">Print / Save as PDF</button>
+<div class="output" id="i-out"></div>
+</div>
+<script>
+function addInvRow(){
+  const d = document.createElement('div');
+  d.className = 'inv-row';
+  d.innerHTML = '<label>Description</label><input class="inv-desc" placeholder="Item"><label>Quantity</label><input class="inv-qty" type="number" placeholder="1"><label>Price</label><input class="inv-price" type="number" placeholder="0">';
+  document.getElementById('inv-rows').appendChild(d);
+}
+</script>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Invoice the day the work is done.</strong> Every day of delay is a day later you get paid. Same-day invoices are a habit, not a chore.</li>
+<li><strong>One invoice, one job.</strong> Mixing jobs on one invoice creates questions. Separate invoices get paid faster.</li>
+<li><strong>Describe the work plainly.</strong> "Homepage design — 3 sections, mobile-friendly" beats "web services". Clients pay what they understand.</li>
+<li><strong>Number every invoice.</strong> INV-001, INV-002 — it looks professional and makes your own records easy at tax time.</li>
+<li><strong>State payment terms on the invoice.</strong> Even a simple "Due within 14 days" prevents most awkward follow-ups.</li>
+<li><strong>Follow up once, politely.</strong> A short reminder 3 days after the due date collects more money than an angry message ever will.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Keep a copy of every invoice in one folder — your future accountant will thank you.</li>
+<li>If a client always pays late, add the cost of waiting into your next quote instead of arguing.</li>
+<li>For repeat clients, save a template invoice and change only the items and date.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is this invoice legally valid?</summary><p>An invoice is a payment request, not a legal document by itself. For tax purposes, keep your records and check your local rules for what an invoice must show (business name, date, amount are the usual basics).</p></details>
+<details><summary>Can I add my logo?</summary><p>This free version keeps it clean and text-based so it prints perfectly everywhere. A premium template pack with logo support is planned for the store.</p></details>
+<details><summary>Where is my invoice saved?</summary><p>Nowhere on our side — it exists only on this page until you print or save it as a PDF. Save that PDF in your own records folder.</p></details>
+<details><summary>What if the client asks for a different currency?</summary><p>Write the currency in the price fields (for example "250 USD") and the totals will follow the same unit. Currency symbols are kept as typed.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Getting paid properly is the difference between a hobby and a business. Freelancers who invoice the same day, with clear descriptions and terms, get paid weeks earlier on average — that is real money, not paperwork. Invoice and bookkeeping help is also a service small businesses pay for monthly, and this generator is the first step toward offering it.</p>
+<p>A premium invoice template pack is planned for the store. The free generator above does the full job today.</p>
+<a class="cta" href="../learn/freelance-pricing.html">Read: how to price your work →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="freelance-rate.html"><h3>Freelance Rate Calculator</h3><p>Set the rate before you invoice it.</p></a>
+<a class="card" href="loan-calculator.html"><h3>Loan / Mortgage / Tax Calculators</h3><p>Know what to set aside from every payment.</p></a>
+<a class="card" href="real-estate.html"><h3>Real Estate Listing Generator</h3><p>For the property side of business.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

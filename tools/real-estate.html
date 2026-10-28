@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Real Estate Listing Description Generator — ToolNest</title>
+<meta name="description" content="Create a full property listing description with highlights from beds, baths, area and features. Free, no sign-up, runs in your browser.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Business &amp; Money</p>
+<h1>Real Estate Listing Generator</h1>
+<p class="desc">Enter the property details and get a full listing description with a headline and highlights. Framework-based, in your browser — no AI server is involved.</p><figure><img src="../assets/img/money.svg" alt="Real Estate Listing Generator — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Real Estate Listing Generator — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Property type</label><select id="re-type"><option>House</option><option>Apartment</option><option>Condo</option><option>Townhouse</option><option>Villa</option></select>
+<label>Bedrooms</label><input id="re-beds" type="number" placeholder="e.g. 3">
+<label>Bathrooms</label><input id="re-baths" type="number" placeholder="e.g. 2">
+<label>Area / neighbourhood</label><input id="re-area" placeholder="e.g. Gulberg, Lahore">
+<label>Price (optional)</label><input id="re-price" placeholder="e.g. PKR 2.5 Crore">
+<label>Features (one per line)</label><textarea id="re-feat" placeholder="e.g. Newly renovated kitchen&#10;Covered parking&#10;Near schools and park"></textarea>
+<button class="btn" onclick="buildRE()">Generate listing</button>
+<div class="output" id="re-out"></div>
+<button class="btn secondary no-print" onclick="copyText('re-out', this)">Copy listing</button>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Headline = beds + type + area.</strong> That is what buyers search for. Save the poetry for the second paragraph.</li>
+<li><strong>Lead with the best true feature.</strong> Renovated kitchen, corner plot, walking distance to schools — one strong opener beats a list of average ones.</li>
+<li><strong>Features are proof, not decoration.</strong> Every feature should answer "why would I live here?" If it does not, cut it.</li>
+<li><strong>Name the area like a local.</strong> "Gulberg" means something; "a prime location" means nothing. Buyers search area names.</li>
+<li><strong>End with a viewing nudge.</strong> "Book a viewing today" turns readers into visitors. A description without a next step just ends.</li>
+<li><strong>Never invent features.</strong> A listing that promises what the property lacks wastes everyone's time and your reputation.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Write the description after the photos, not before — the words should match what buyers will see.</li>
+<li>For rentals, add the monthly rent, deposit and availability in the first two lines.</li>
+<li>One honest drawback ("busy street at rush hour") makes the rest of the listing more believable.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Can I use this for rentals too?</summary><p>Yes. Put the monthly rent in the price field and add availability and deposit as features — the same structure works.</p></details>
+<details><summary>Should I include the exact address?</summary><p>Area and neighbourhood, yes. Full street address is better shared privately with serious buyers, not in a public listing.</p></details>
+<details><summary>How long should a listing be?</summary><p>Long enough to answer the obvious questions (rooms, area, features, price) and short enough to read on a phone — roughly 150–250 words.</p></details>
+<details><summary>Is the generated text original?</summary><p>Yes — it is built from the details you enter. Read it once and adjust anything that does not match the real property.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Agents and property owners pay for listings that get viewings: description writing, photo captions and listing optimization are real services, and better listings sell faster, which is worth commission money. The same skill also works for property portals, brochures and social posts — one description becomes five pieces of marketing.</p>
+<a class="cta" href="https://aa-digital-network-website.pages.dev">Want listings written for you? See content services →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="loan-calculator.html"><h3>Loan / Mortgage / Tax Calculators</h3><p>Buyers always ask about payments next.</p></a>
+<a class="card" href="etsy-description.html"><h3>Etsy / Amazon Description Generator</h3><p>Descriptions that sell anything, not just homes.</p></a>
+<a class="card" href="invoice-generator.html"><h3>Invoice Generator</h3><p>Invoice the commission properly.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

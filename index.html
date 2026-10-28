@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToolNest — Free Tools to Learn and Earn | Resume, Calculators, Generators</title>
+<meta name="description" content="ToolNest gives you 15 free tools that run entirely in your browser: resume builder, invoice generator, loan and freelance calculators, YouTube, Etsy, cold email and blog generators, and more. No sign-up. Learn each skill and how to earn with it.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="index.html">Tool<span>Nest</span></a>
+<nav class="navlinks">
+<a href="index.html">Tools</a><a href="learn.html">Learn</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a>
+</nav>
+</div></header>
+<div class="wrap">
+<div class="hero">
+<h1>Free tools. Real skills. A way to earn.</h1>
+<p>15 free tools that run entirely in your browser — plus a short guide with every tool that teaches you the skill and how people earn with it.</p>
+<img src="assets/img/hero.svg" alt="ToolNest — free tools dashboard illustration" style="width:100%;max-width:520px;border-radius:12px;margin:0 auto 16px;display:block">
+<div class="searchbox">
+<input id="tool-search" type="search" placeholder="Search tools… try “resume”, “invoice”, “YouTube”">
+<button onclick="document.getElementById('tool-search').focus()">Search</button>
+</div>
+</div>
+
+<div class="chips">
+<button class="chip on" data-cat="all">All tools</button>
+<button class="chip" data-cat="career">Career</button>
+<button class="chip" data-cat="writing">Writing</button>
+<button class="chip" data-cat="money">Business &amp; Money</button>
+<button class="chip" data-cat="marketing">Marketing</button>
+<button class="chip" data-cat="creator">Creator</button>
+<button class="chip" data-cat="productivity">Productivity</button>
+</div>
+
+<div class="grid" id="tool-grid">
+<a class="card tool-card" data-cat="career" data-name="Resume Builder Cover Letter Generator" data-desc="Build a clean resume and a matching cover letter in minutes" href="tools/resume-builder.html"><span class="badge b-career">R</span><h3>Resume Builder + Cover Letter</h3><p>Fill in a form, get a clean resume and a matching cover letter. Print or save as PDF.</p><span class="tag">Career</span></a>
+<a class="card tool-card" data-cat="marketing" data-name="Etsy Amazon Product Description Generator" data-desc="Product descriptions that sell for Etsy and Amazon shops" href="tools/etsy-description.html"><span class="badge b-marketing">E</span><h3>Etsy / Amazon Description Generator</h3><p>Turn features into a title, bullet points and a description buyers actually read.</p><span class="tag">Marketing</span></a>
+<a class="card tool-card" data-cat="marketing" data-name="Cold Email Subject Line Generator" data-desc="Cold emails and subject lines for outreach that gets replies" href="tools/cold-email.html"><span class="badge b-marketing">C</span><h3>Cold Email + Subject Line Generator</h3><p>Five subject lines and a short, respectful cold email for your next outreach.</p><span class="tag">Marketing</span></a>
+<a class="card tool-card" data-cat="money" data-name="Loan Mortgage Tax Calculator" data-desc="Loan payments, mortgage estimates and freelancer tax estimates" href="tools/loan-calculator.html"><span class="badge b-money">$</span><h3>Loan / Mortgage / Tax Calculators</h3><p>Monthly payments, total interest, and a freelancer tax estimate. Educational estimates only.</p><span class="tag">Business &amp; Money</span></a>
+<a class="card tool-card" data-cat="creator" data-name="YouTube Title Description Hashtag Generator" data-desc="Video titles, descriptions and hashtags for creators" href="tools/youtube-generator.html"><span class="badge b-creator">Y</span><h3>YouTube Title + Description + Hashtags</h3><p>Ten title ideas, a ready description and hashtags from one keyword.</p><span class="tag">Creator</span></a>
+<a class="card tool-card" data-cat="money" data-name="Invoice Generator" data-desc="Professional invoices for freelancers in minutes" href="tools/invoice-generator.html"><span class="badge b-money">I</span><h3>Invoice Generator</h3><p>Add items, set tax, and print a clean invoice with totals done for you.</p><span class="tag">Business &amp; Money</span></a>
+<a class="card tool-card" data-cat="writing" data-name="Text Summarizer" data-desc="Shorten long text to the sentences that matter" href="tools/text-summarizer.html"><span class="badge b-writing">S</span><h3>Text Summarizer</h3><p>Paste long text, pick a length, get a summary of the sentences that matter most.</p><span class="tag">Writing</span></a>
+<a class="card tool-card" data-cat="writing" data-name="Paraphraser Grammar Checker" data-desc="Reword text and catch common grammar mistakes" href="tools/paraphraser.html"><span class="badge b-writing">P</span><h3>Paraphraser + Grammar Checker</h3><p>Reword sentences with synonyms and catch common mistakes before you send anything.</p><span class="tag">Writing</span></a>
+<a class="card tool-card" data-cat="career" data-name="LinkedIn Headline Bio Generator" data-desc="Headlines and About sections for LinkedIn profiles" href="tools/linkedin-generator.html"><span class="badge b-career">L</span><h3>LinkedIn Headline + Bio Generator</h3><p>Three headline options and a ready About section from your role and one win.</p><span class="tag">Career</span></a>
+<a class="card tool-card" data-cat="creator" data-name="Instagram Caption Bio Generator" data-desc="Captions, bios and hashtags for Instagram" href="tools/instagram-generator.html"><span class="badge b-creator">Ig</span><h3>Instagram Caption + Bio Generator</h3><p>Five captions, a bio and hashtags from one topic and tone.</p><span class="tag">Creator</span></a>
+<a class="card tool-card" data-cat="writing" data-name="Business Name Slogan Generator" data-desc="Business names and slogans from a keyword" href="tools/business-name.html"><span class="badge b-writing">B</span><h3>Business Name + Slogan Generator</h3><p>Eight name ideas and five slogans from a single keyword.</p><span class="tag">Writing</span></a>
+<a class="card tool-card" data-cat="money" data-name="Freelance Rate Calculator" data-desc="Hourly and day rates that cover expenses and tax" href="tools/freelance-rate.html"><span class="badge b-money">F</span><h3>Freelance Rate Calculator</h3><p>Your minimum hourly, day and weekly rate — covering expenses and tax, not just wishful thinking.</p><span class="tag">Business &amp; Money</span></a>
+<a class="card tool-card" data-cat="productivity" data-name="Meeting Notes Summarizer" data-desc="Turn messy meeting notes into decisions and actions" href="tools/meeting-notes.html"><span class="badge b-productivity">M</span><h3>Meeting Notes Summarizer</h3><p>Paste messy notes, get key points, decisions and action items in order.</p><span class="tag">Productivity</span></a>
+<a class="card tool-card" data-cat="writing" data-name="Blog Title Outline Generator" data-desc="Blog titles and full outlines from a topic" href="tools/blog-generator.html"><span class="badge b-writing">Bl</span><h3>Blog Title + Outline Generator</h3><p>Eight titles and a complete article outline from one topic.</p><span class="tag">Writing</span></a>
+<a class="card tool-card" data-cat="money" data-name="Real Estate Listing Description Generator" data-desc="Property listing descriptions for agents and owners" href="tools/real-estate.html"><span class="badge b-money">Re</span><h3>Real Estate Listing Generator</h3><p>A full listing description with highlights from beds, baths, area and features.</p><span class="tag">Business &amp; Money</span></a>
+</div>
+
+<div class="trust">Free · No sign-up · Your files and text never leave your browser — every tool runs on your own device.</div>
+
+<div class="section">
+<h2>Learn + Earn guides</h2>
+<p class="sub">Short, practical guides — each one teaches the skill behind a tool and how people earn with it.</p>
+<div class="grid">
+<a class="card" href="learn/resume-that-gets-interviews.html"><h3>How to Write a Resume That Gets Interviews</h3><p>Seven rules hiring managers actually use — and the mistakes that get resumes ignored.</p></a>
+<a class="card" href="learn/freelance-pricing.html"><h3>How to Price Your Freelance Work (Without Guessing)</h3><p>Expenses, tax, quiet weeks and confidence — the honest maths behind a rate.</p></a>
+<a class="card" href="learn/product-descriptions-that-sell.html"><h3>Product Descriptions That Sell on Etsy and Amazon</h3><p>Benefits first, features second, and the one line most sellers forget.</p></a>
+<a class="card" href="learn/youtube-titles-that-get-clicks.html"><h3>YouTube Titles That Get Clicks (Without Clickbait)</h3><p>Curiosity, clarity and proof — and why lying in a title costs you subscribers.</p></a>
+</div>
+<p><a href="learn.html">See all guides →</a></p>
+</div>
+
+<div class="storeband">
+<h2 style="margin-top:0">Premium packs — coming to the store</h2>
+<p style="margin-bottom:0">The free tools above stay free. Premium template packs (resume designs, invoice templates, description bundles) are planned for the store — the free tool always comes first, and the premium version only adds more designs, never locks the basic tool away.</p>
+</div>
+</div>
+<footer class="site"><div class="foot">
+<span>© 2026 ToolNest — Free tools to learn and earn.</span>
+<span><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="sitemap.xml">Sitemap</a></span>
+</div></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

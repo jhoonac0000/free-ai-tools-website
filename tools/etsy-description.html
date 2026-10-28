@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Etsy / Amazon Product Description Generator — ToolNest</title>
+<meta name="description" content="Turn product features into a title, bullet points and a description that sells on Etsy and Amazon. Free, no sign-up, runs in your browser.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Marketing</p>
+<h1>Etsy / Amazon Product Description Generator</h1>
+<p class="desc">Enter your product and its features, and get a ready-to-paste title, bullets and description. This generator works from proven description frameworks in your browser — no AI server is involved.</p><figure><img src="../assets/img/marketing.svg" alt="Etsy / Amazon Product Description Generator — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Etsy / Amazon Product Description Generator — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Product name</label><input id="e-product" placeholder="e.g. Handmade Ceramic Coffee Mug">
+<label>Features (one per line)</label><textarea id="e-feats" placeholder="e.g. Holds 350ml&#10;Dishwasher safe&#10;Glazed by hand"></textarea>
+<label>Who is it for?</label><input id="e-aud" placeholder="e.g. coffee lovers, gift buyers">
+<label>Tone</label><select id="e-tone"><option value="friendly">Friendly</option><option value="premium">Premium</option><option value="playful">Playful</option><option value="minimal">Minimal</option></select>
+<button class="btn" onclick="buildEtsy()">Generate description</button>
+<div class="output" id="e-out"></div>
+<button class="btn secondary no-print" onclick="copyText('e-out', this)">Copy description</button>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Benefits first, features second.</strong> "Keeps coffee hot for 2 hours" sells better than "350ml capacity". Translate every feature into what the buyer feels.</li>
+<li><strong>Put the main keyword in the first line.</strong> Search on Etsy and Amazon reads the beginning of your title and description first.</li>
+<li><strong>Write bullets for scanners.</strong> Most buyers read bullets, not paragraphs. One benefit per bullet, no long sentences.</li>
+<li><strong>Answer the obvious questions.</strong> Size, material, care, shipping time — if buyers have to ask, some of them just leave.</li>
+<li><strong>End with a reason to act now.</strong> "Ready to ship" or "made in small batches" beats a description that just stops.</li>
+<li><strong>Never copy a competitor's listing.</strong> Similar structure is fine; copied text gets listings removed and hurts your shop.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Test two tones for the same product and keep the one with the better click rate.</li>
+<li>Add one line about who the product is NOT for — it filters out bad-fit buyers and refunds.</li>
+<li>Re-generate after you change photos: description and photos should tell the same story.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Does this work for Amazon too, or only Etsy?</summary><p>Both. The structure — title, bullets, description, tags — is the same on both marketplaces. Amazon leans more on bullets; Etsy leans more on story. Use the same output and trim to fit.</p></details>
+<details><summary>Is the description original?</summary><p>Yes — it is generated from what you type. Your features and product name make every output different. Still, read it once and adjust anything that does not sound like your product.</p></details>
+<details><summary>Can I use this for digital products?</summary><p>Yes. Replace physical features with what the buyer gets (pages, file formats, how it is used) and the same framework works.</p></details>
+<details><summary>Why does it ask for the audience?</summary><p>Because "for coffee lovers" and "for wedding gifts" need different words. The audience line is what makes a generic description feel written for one buyer.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Online sellers need new descriptions every week, and many will pay for them. Description writing is a common freelance service, and sellers who learn it also sell more of their own products — better copy is often worth more than a lower price. This is one of the strongest paid fits in the whole toolkit: a premium description bundle is planned for the store.</p>
+<a class="cta" href="https://aa-digital-network-website.pages.dev">Want descriptions done for you? See writing services →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="cold-email.html"><h3>Cold Email + Subject Line Generator</h3><p>Reach buyers and stockists, not just marketplaces.</p></a>
+<a class="card" href="blog-generator.html"><h3>Blog Title + Outline Generator</h3><p>Content that brings buyers to your shop.</p></a>
+<a class="card" href="instagram-generator.html"><h3>Instagram Caption + Bio Generator</h3><p>Social posts that point at your listings.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

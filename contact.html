@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact ToolNest</title>
+<meta name="description" content="Contact ToolNest: report a broken tool, suggest a new tool, or ask about premium packs and services.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="index.html">Tools</a><a href="learn.html">Learn</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap">
+<h1>Contact</h1>
+<div class="prose">
+<p>Found a broken tool? Have an idea for a new one? Want a premium pack or a done-for-you service? Write your message below — it is prepared on your device, and you can copy it or send it through your own email.</p>
+</div>
+<div class="toolbox">
+<label>Your name</label><input id="ct-name" placeholder="e.g. Alex Khan">
+<label>Topic</label><select id="ct-topic"><option>Broken tool</option><option>New tool idea</option><option>Premium packs</option><option>Done-for-you service</option><option>Other</option></select>
+<label>Your message</label><textarea id="ct-msg" placeholder="What happened, or what would you like?"></textarea>
+<button class="btn" onclick="prepContact()">Prepare my message</button>
+<div class="output" id="ct-out"></div>
+<button class="btn secondary no-print" onclick="copyText('ct-out', this)">Copy message</button>
+<p class="note">This form does not send anything by itself — there is no server behind it. Copy the prepared message and send it through your own email to the address shown on our services site. For done-for-you services, visit <a href="https://aa-digital-network-website.pages.dev">AA Digital Network</a>.</p>
+</div>
+<script>
+function prepContact(){
+  const n = document.getElementById('ct-name').value.trim() || 'A ToolNest visitor';
+  const t = document.getElementById('ct-topic').value;
+  const m = document.getElementById('ct-msg').value.trim();
+  if(!m){ document.getElementById('ct-out').textContent = 'Please write a message first.'; return; }
+  document.getElementById('ct-out').textContent = 'Topic: ' + t + '\nFrom: ' + n + '\n\n' + m;
+}
+</script>
+<p><a href="index.html">← Back to all tools</a></p>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a></span></div></footer>
+</body>
+</html>

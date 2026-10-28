@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Text Summarizer — Shorten Long Text Fast — ToolNest</title>
+<meta name="description" content="Paste long text and get a summary of the sentences that matter most. Free, no sign-up, and your text never leaves your browser.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Writing</p>
+<h1>Text Summarizer</h1>
+<p class="desc">Paste an article, a report or long notes, and get the sentences that carry the most meaning. This is an extractive summarizer: it selects the original sentences, it does not invent new ones — and it runs entirely in your browser.</p><figure><img src="../assets/img/writing.svg" alt="Text Summarizer — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Text Summarizer — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Paste your text</label><textarea id="s-text" placeholder="Paste a few paragraphs here…"></textarea>
+<label>Summary length (% of original sentences)</label><input id="s-len" type="number" min="10" max="80" value="30">
+<button class="btn" onclick="summarize()">Summarize</button>
+<div class="output" id="s-out"></div>
+<button class="btn secondary no-print" onclick="copyText('s-out', this)">Copy summary</button>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Start at 30%.</strong> That is usually enough to keep the argument and drop the filler. Go shorter only when you already know the topic.</li>
+<li><strong>Read the summary, then skim the original.</strong> A summary is a map, not the territory — check the parts it skipped before you quote anything.</li>
+<li><strong>Use it for triage, not for learning.</strong> Summaries are perfect for deciding what deserves a full read. They are a poor replacement for reading what matters.</li>
+<li><strong>For study notes, summarize twice.</strong> Once at 50% to learn the structure, once at 20% to test what you remember.</li>
+<li><strong>Never submit a summary as your own writing.</strong> Summarized text is still the original author's work — credit the source.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Long, repetitive texts summarize best. Very short texts (under 5 sentences) barely change.</li>
+<li>If the summary looks wrong, the original may be badly structured — that is useful information too.</li>
+<li>Pair this with the Meeting Notes Summarizer for notes that need actions, not just shorter text.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>How does this summarizer work?</summary><p>It scores every sentence by how often its meaningful words appear in the whole text, then keeps the highest-scoring sentences in their original order. It never rewrites or invents sentences.</p></details>
+<details><summary>Is my text uploaded anywhere?</summary><p>No. The whole process runs in your browser. You can disconnect from the internet after the page loads and it still works.</p></details>
+<details><summary>Why is the summary sometimes uneven?</summary><p>Because it keeps original sentences. If the original jumps between topics, the summary will too — that reflects the source, not a bug.</p></details>
+<details><summary>Can I summarize a PDF?</summary><p>Copy the text out of the PDF first, then paste it here. This tool works on text, not on files.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Reading load is a real business problem: managers, students and researchers all pay to have long material turned into short briefs. Summarizing is a freelance service (research briefs, meeting briefs, article digests), and it is also a daily productivity skill that makes every other service faster. A premium version for long documents is planned for the store; the free tool above handles everyday lengths today.</p>
+<a class="cta" href="https://aa-digital-network-website.pages.dev">Want research help done for you? See services →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="meeting-notes.html"><h3>Meeting Notes Summarizer</h3><p>Notes need actions, not just shorter text.</p></a>
+<a class="card" href="paraphraser.html"><h3>Paraphraser + Grammar Checker</h3><p>Reword what the summary kept.</p></a>
+<a class="card" href="blog-generator.html"><h3>Blog Title + Outline Generator</h3><p>Turn a summary into a new article plan.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

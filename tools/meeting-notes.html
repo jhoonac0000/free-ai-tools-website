@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Meeting Notes Summarizer — ToolNest</title>
+<meta name="description" content="Turn messy meeting notes into key points, decisions and action items. Free, no sign-up, and your notes never leave your browser.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Productivity</p>
+<h1>Meeting Notes Summarizer</h1>
+<p class="desc">Paste raw meeting notes and get them back organized: key points, decisions and action items. Mark lines with "Action:" or "Decision:" for the cleanest result. Everything runs in your browser.</p><figure><img src="../assets/img/productivity.svg" alt="Meeting Notes Summarizer — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Meeting Notes Summarizer — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Paste your meeting notes</label><textarea id="mn-text" placeholder="e.g.&#10;Discussed the new website launch.&#10;Decision: launch on Monday.&#10;Action: Sara will send the final homepage text by Friday.&#10;Budget approved for ads."></textarea>
+<button class="btn" onclick="summarizeMeeting()">Organize my notes</button>
+<div class="output" id="mn-out"></div>
+<button class="btn secondary no-print" onclick="copyText('mn-out', this)">Copy summary</button>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Mark decisions as you write.</strong> Start a line with "Decision:" and this tool (and your future self) will find it instantly.</li>
+<li><strong>Every action needs a name and a date.</strong> "Someone should follow up" is not an action. "Sara follows up by Friday" is.</li>
+<li><strong>Write notes during the meeting, not after.</strong> Memory edits itself within an hour. Raw notes now beat polished notes later.</li>
+<li><strong>Send the summary the same day.</strong> A summary sent next week reopens decisions people thought were closed.</li>
+<li><strong>Keep one page per meeting.</strong> If the summary needs two pages, the meeting probably needed an agenda instead.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Use the same three headings every time (Key points, Decisions, Actions) — people learn where to look.</li>
+<li>Put dates in the notes as you go; the tool collects them into one place.</li>
+<li>If a meeting has no decisions and no actions, say so in one line — that itself is useful information.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>How does it find actions and decisions?</summary><p>It looks for lines marked "Action:", "Decision:", "Todo:" and similar, plus sentences with commitment words like "will" and "must". Marking your lines makes it far more accurate.</p></details>
+<details><summary>Does it work on voice transcripts?</summary><p>Yes, if the transcript is pasted as text. Messy transcripts still organize, but marking decisions helps a lot.</p></details>
+<details><summary>Are my notes private?</summary><p>Yes. Nothing is uploaded; the whole summary is produced in your browser.</p></details>
+<details><summary>What is the difference from the Text Summarizer?</summary><p>The Text Summarizer shortens any text. This tool structures notes specifically into points, decisions and actions — different job, different output.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Meeting summaries are a quiet freelance service: executives, teams and students all pay for clean notes, briefs and follow-up lists. It is also a skill that makes you valuable inside any team — the person who sends the clear summary after every meeting becomes the person everyone relies on. Virtual assistance and operations support both start with exactly this habit.</p>
+<a class="cta" href="../learn/freelance-pricing.html">Read: how to price your work →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="text-summarizer.html"><h3>Text Summarizer</h3><p>Shorten any long text, not just notes.</p></a>
+<a class="card" href="paraphraser.html"><h3>Paraphraser + Grammar Checker</h3><p>Clean up the wording after organizing.</p></a>
+<a class="card" href="freelance-rate.html"><h3>Freelance Rate Calculator</h3><p>Price note-taking as a service.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

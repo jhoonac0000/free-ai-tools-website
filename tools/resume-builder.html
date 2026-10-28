@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Resume Builder + Cover Letter Generator — ToolNest</title>
+<meta name="description" content="Build a clean, professional resume and a matching cover letter in minutes. Free, no sign-up, and everything runs in your browser.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › Career</p>
+<h1>Resume Builder + Cover Letter Generator</h1>
+<p class="desc">Fill in the form and get a clean resume plus a matching cover letter. Nothing is uploaded anywhere — it all happens in your browser.</p><figure><img src="../assets/img/career.svg" alt="Resume Builder + Cover Letter Generator — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Resume Builder + Cover Letter Generator — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Full name</label><input id="r-name" placeholder="e.g. Sarah Ahmed">
+<label>Target role</label><input id="r-role" placeholder="e.g. Customer Service Representative">
+<label>Email</label><input id="r-email" placeholder="you@example.com">
+<label>Phone (optional)</label><input id="r-phone" placeholder="+1 555 000 0000">
+<label>City</label><input id="r-city" placeholder="e.g. Lahore, Pakistan">
+<label>Target company (for the cover letter, optional)</label><input id="r-company" placeholder="e.g. Northwind Traders">
+<label>Professional summary</label><textarea id="r-summary" placeholder="Two or three sentences about what you do and what you are good at."></textarea>
+<label>Skills (comma separated)</label><input id="r-skills" placeholder="e.g. Communication, Excel, Problem solving">
+<label>Experience (one job per line)</label><textarea id="r-exp" placeholder="e.g. Sales Assistant, City Mart (2022–2025) — helped customers, handled stock, trained 2 new staff."></textarea>
+<label>Education</label><textarea id="r-edu" placeholder="e.g. BBA, University of the Punjab (2021)"></textarea>
+<button class="btn" onclick="buildResume()">Build my resume</button>
+<button class="btn secondary no-print" onclick="window.print()">Print / Save as PDF</button>
+<div class="output" id="r-out"></div>
+<h3>Your cover letter</h3>
+<div class="output" id="r-letter"></div>
+<button class="btn secondary no-print" onclick="copyText('r-letter', this)">Copy cover letter</button>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>One page if you can.</strong> Hiring managers scan resumes in seconds. Cut anything that does not help this specific role.</li>
+<li><strong>Put the role in the summary.</strong> Your first two lines should say what you do and what you are good at — not your life story.</li>
+<li><strong>Use numbers.</strong> "Handled 40 customers a day" beats "responsible for customers". Numbers make claims believable.</li>
+<li><strong>Match the job ad's words.</strong> If the ad says "customer support", use those exact words — many companies filter by keywords first.</li>
+<li><strong>Tailor the cover letter.</strong> One paragraph about why this company, one about your best proof, one polite close. Never send the same letter everywhere.</li>
+<li><strong>Proofread twice.</strong> One typo can end an application. Read it out loud once before sending.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Save your resume as a PDF with a clear file name: <em>YourName-Role.pdf</em>.</li>
+<li>For a niche role (nurses, fresh graduates), add one line of niche proof at the top of the summary.</li>
+<li>Keep a master resume with everything, then delete lines to make each one-page version.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is this resume builder really free?</summary><p>Yes. There is no account, no payment and no watermark. Your resume is built in your browser and you print or save it yourself.</p></details>
+<details><summary>Where does my information go?</summary><p>Nowhere. Everything you type stays on your device. We have no server receiving your resume — see our Privacy page.</p></details>
+<details><summary>Should my resume be one page or two?</summary><p>One page for most jobs under 10 years of experience. Two pages only when the extra page adds real proof, not filler.</p></details>
+<details><summary>Can I use this for a specific niche, like nursing?</summary><p>Yes. Put the niche in your target role and add one line of niche proof (licence, ward experience, patient numbers) in the summary.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Resume writing is a service people pay for. On freelance platforms, sellers offer resume rewrites, LinkedIn makeovers and cover letters — often as a first job that leads to bigger writing work. The same skill also helps you directly: a better resume is the cheapest way to raise your own salary, because every interview starts with it.</p>
+<p>A premium resume template pack is planned for the store. For now, the free builder above does the full job.</p>
+<a class="cta" href="https://aa-digital-network-website.pages.dev">Want it done for you? See writing services →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="linkedin-generator.html"><h3>LinkedIn Headline + Bio Generator</h3><p>Your profile should match your resume.</p></a>
+<a class="card" href="freelance-rate.html"><h3>Freelance Rate Calculator</h3><p>Price your own work once you are hired as a freelancer.</p></a>
+<a class="card" href="business-name.html"><h3>Business Name + Slogan Generator</h3><p>Starting something of your own? Name it well.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>
