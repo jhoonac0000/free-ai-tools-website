@@ -17,7 +17,7 @@
 - `tools/*.html` — 15 tool pages, each: working tool FIRST, then LEARN (steps + pro tips), FAQ (3–4), EARN (honest earning hint + one CTA), related tools (3), category link.
 - `learn.html` + `learn/*.html` — Learn index + 4 original guides.
 - `about.html`, `contact.html` (client-side message preparation, no fake sending), `privacy.html` (files/text never leave the browser).
-- `sitemap.xml`, `robots.txt` — replace `YOUR-DOMAIN-HERE` with the real domain before deploy.
+- `sitemap.xml`, `robots.txt` — live domain set to `https://free-ai-tools-website.pages.dev`.
 - `COMPETITOR-COMPARISON-2026-10-28.md` — Step-1 comparison (TinyWow, iLovePDF/Smallpdf, Toolify).
 - `SEO-PLAN-2026-10-28.md` — SEO audit, gap list, 90-day goal plan.
 

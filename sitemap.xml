@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- NOTE: replace https://YOUR-DOMAIN-HERE with the real domain before deploy. -->
+<!-- Live domain: https://free-ai-tools-website.pages.dev -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://YOUR-DOMAIN-HERE/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/learn.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/contact.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/privacy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/resume-builder.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/etsy-description.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/cold-email.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/loan-calculator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/youtube-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/invoice-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/text-summarizer.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/paraphraser.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/linkedin-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/instagram-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/business-name.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/freelance-rate.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/meeting-notes.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/blog-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/tools/real-estate.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/learn/resume-that-gets-interviews.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/learn/freelance-pricing.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/learn/product-descriptions-that-sell.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://YOUR-DOMAIN-HERE/learn/youtube-titles-that-get-clicks.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/learn.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/contact.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/privacy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/resume-builder.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/etsy-description.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/cold-email.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/loan-calculator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/youtube-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/invoice-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/text-summarizer.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/paraphraser.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/linkedin-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/instagram-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/business-name.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/freelance-rate.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/meeting-notes.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/blog-generator.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/tools/real-estate.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/learn/resume-that-gets-interviews.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/learn/freelance-pricing.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/learn/product-descriptions-that-sell.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://free-ai-tools-website.pages.dev/learn/youtube-titles-that-get-clicks.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
