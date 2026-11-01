@@ -83,3 +83,7 @@ th{background:#f1f5f9}
   .toolbox,.prose,.earn,.section{display:none !important}
   .print-area{display:block !important}
 }
+.hero-figure{margin:22px 0}
+.hero-figure img{width:100%;max-width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:var(--radius)}
+.hero-figure figcaption{color:var(--muted);font-size:14px;margin-top:8px;text-align:center}
+.card .cardimg{width:100%;height:auto;display:block;border-radius:8px;margin-bottom:12px}
