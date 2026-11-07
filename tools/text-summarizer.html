@@ -49,6 +49,46 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does this summarizer work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It scores every sentence by how often its meaningful words appear in the whole text, then keeps the highest-scoring sentences in their original order. It never rewrites or invents sentences."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my text uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The whole process runs in your browser. You can disconnect from the internet after the page loads and it still works."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is the summary sometimes uneven?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because it keeps original sentences. If the original jumps between topics, the summary will too — that reflects the source, not a bug."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I summarize a PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copy the text out of the PDF first, then paste it here. This tool works on text, not on files."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <header class="site"><div class="nav">
@@ -56,7 +96,7 @@
 <nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
 </div></header>
 <div class="wrap toolpage">
-<p class="breadcrumb"><a href="../index.html">Tools</a> › Writing</p>
+<p class="breadcrumb"><a href="../index.html">Tools</a> › <a href="../category/writing-content.html">Writing &amp; Content</a></p>
 <h1>Text Summarizer</h1>
 <p class="desc">Paste an article, a report or long notes, and get the sentences that carry the most meaning. This is an extractive summarizer: it selects the original sentences, it does not invent new ones — and it runs entirely in your browser.</p><figure><img src="../assets/img/writing.svg" alt="Text Summarizer — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Text Summarizer — illustration</figcaption></figure>
 <div class="toolbox">

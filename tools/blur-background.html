@@ -49,6 +49,46 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my photo uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Both blur modes run in your browser. The people-detection model used by Background mode downloads to your device once; your photo itself never leaves it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Background mode did not start. Why?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The detection model needs a decent connection for its one-time download and a modern browser. If it cannot load, the tool tells you and Whole-image mode still works."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why did part of the person get blurred?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Detection is automatic and not perfect — loose hair, hats and arms held away from the body can be misread. A clearer photo with the subject well separated from the background detects better."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What format is the download?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PNG, at the original dimensions, so no quality is lost beyond the blur itself."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <header class="site"><div class="nav">
@@ -56,7 +96,7 @@
 <nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
 </div></header>
 <div class="wrap toolpage">
-<p class="breadcrumb"><a href="../index.html">Tools</a> › PDF &amp; Image Tools</p>
+<p class="breadcrumb"><a href="../index.html">Tools</a> › <a href="../category/pdf-image-tools.html">PDF &amp; Image Tools</a></p>
 <h1>Blur Tool — Image & Background Blur</h1>
 <p class="desc">Blur a whole photo, or keep the person sharp and blur only what is behind them. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server. Background mode detects the person with an on-device model (one-time download).</p><figure><img src="../assets/img/files.svg" alt="Blur Tool — Image & Background Blur — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Blur Tool — Image & Background Blur — illustration</figcaption></figure>
 <div class="toolbox">

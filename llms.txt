@@ -4,6 +4,14 @@
 
 Site: https://free-ai-tools-website.pages.dev/
 
+## Categories
+
+- [Career Tools](https://free-ai-tools-website.pages.dev/category/career.html): 3 tools — Get hired and charge what you're worth.
+- [Writing & Content Tools](https://free-ai-tools-website.pages.dev/category/writing-content.html): 4 tools — Say it better, shorter and cleaner.
+- [Marketing & Business Tools](https://free-ai-tools-website.pages.dev/category/marketing-business.html): 6 tools — Sell more, reach more people.
+- [Finance & Billing Tools](https://free-ai-tools-website.pages.dev/category/finance-billing.html): 2 tools — Know your numbers, bill like a pro.
+- [PDF & Image Tools](https://free-ai-tools-website.pages.dev/category/pdf-image-tools.html): 12 tools — Fix files right on your device — nothing is uploaded.
+
 ## PDF Tools
 
 - [PDF Merge](https://free-ai-tools-website.pages.dev/tools/pdf-merge.html): Combine two or more PDF files into a single PDF, in your chosen order.
