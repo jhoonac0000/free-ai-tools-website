@@ -263,3 +263,666 @@ function buildRE(){
   const desc = `FOR SALE — ${beds}-Bedroom, ${baths}-Bathroom ${type} in ${area}${price ? ' — ' + price : ''}.\n\nThis ${type.toLowerCase()} offers comfortable living in a sought-after part of ${area}. ${featLine}The layout is practical for families, professionals, and first-time buyers alike.\n\nHighlights:\n• ${beds} bedrooms and ${baths} bathrooms\n• Located in ${area}\n${feat.map(f => '• ' + f).join('\n')}\n\nBook a viewing today — homes in ${area} at this standard do not stay on the market for long.`;
   out('re-out', esc(desc));
 }
+
+/* ============================================================
+   FILE TOOLS (16–21) — added 2026-11-07
+   Everything runs 100% in the visitor's browser. Files are
+   never uploaded anywhere. Libraries (pdf-lib, pdf.js, docx,
+   mammoth, html2pdf) are loaded per-page from CDN.
+   ============================================================ */
+function ftKB(bytes){ return (bytes/1024).toFixed(1) + ' KB'; }
+function ftMB(bytes){ return (bytes/1048576).toFixed(2) + ' MB'; }
+function ftSize(bytes){ return bytes >= 1048576 ? ftMB(bytes) : ftKB(bytes); }
+function ftBase(name){ return (name || 'file').replace(/\.[^.]+$/, ''); }
+function ftDownload(blob, filename){
+  window.__ftLastBlob = blob; window.__ftLastName = filename;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+function ftLoadImage(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => res({ img, url });
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('That file could not be read as an image.')); };
+    img.src = url;
+  });
+}
+function ftCanvasBlob(canvas, type, quality){
+  return new Promise(res => canvas.toBlob(res, type, quality));
+}
+
+/* ---------- 16. Image Compressor (target size) ---------- */
+let ftCompFile = null;
+function ftCompPick(input){
+  ftCompFile = input.files && input.files[0];
+  const info = $('ic-info'), out = $('ic-out');
+  if (!ftCompFile){ info.textContent = ''; return; }
+  info.textContent = 'Selected: ' + ftCompFile.name + ' — ' + ftSize(ftCompFile.size);
+  out.innerHTML = '';
+}
+function ftCompTarget(){
+  const sel = $('ic-target').value;
+  if (sel === 'custom'){
+    const v = parseFloat($('ic-custom').value);
+    return isNaN(v) || v <= 0 ? null : Math.round(v * 1024);
+  }
+  return parseInt(sel, 10) * 1024;
+}
+async function ftCompress(){
+  const out = $('ic-out');
+  if (!ftCompFile){ out.innerHTML = '<p>Please choose an image first.</p>'; return; }
+  const target = ftCompTarget();
+  if (!target){ out.innerHTML = '<p>Please enter a valid custom target size in KB.</p>'; return; }
+  const format = $('ic-format').value; // image/jpeg or image/webp
+  const ext = format === 'image/webp' ? 'webp' : 'jpg';
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    if (ftCompFile.size <= target && (ftCompFile.type === format)){
+      out.innerHTML = '<p>Your image is already smaller than the target (' + ftSize(ftCompFile.size) + '). Here is a copy:</p>';
+      ftShowImageResult(out, ftCompFile, ftBase(ftCompFile.name) + '.' + ext);
+      return;
+    }
+    const { img, url } = await ftLoadImage(ftCompFile);
+    let scale = 1, best = null;
+    for (let round = 0; round < 14; round++){
+      const w = Math.max(1, Math.round(img.naturalWidth * scale));
+      const h = Math.max(1, Math.round(img.naturalHeight * scale));
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const ctx = cv.getContext('2d');
+      if (format === 'image/jpeg'){ ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); }
+      ctx.drawImage(img, 0, 0, w, h);
+      // binary search the highest quality that still fits the target
+      let lo = 0.05, hi = 0.95, fit = null;
+      const minBlob = await ftCanvasBlob(cv, format, lo);
+      if (minBlob && minBlob.size <= target){ fit = minBlob; }
+      for (let i = 0; i < 9 && fit !== minBlob; i++){
+        const mid = (lo + hi) / 2;
+        const b = await ftCanvasBlob(cv, format, mid);
+        if (!b) break;
+        if (b.size <= target){ fit = b; lo = mid; } else { hi = mid; }
+      }
+      if (fit){ best = fit; break; }
+      scale *= 0.82; // still too big at lowest quality — shrink dimensions and retry
+    }
+    URL.revokeObjectURL(url);
+    if (!best){ out.innerHTML = '<p>Sorry — this image could not be brought down to that target. Try a slightly larger target size.</p>'; return; }
+    const name = ftBase(ftCompFile.name) + '-' + Math.round(target/1024) + 'kb.' + ext;
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftSize(ftCompFile.size) + ' → <strong>' + ftSize(best.size) + '</strong> (target ' + ftSize(target) + ').</p>';
+    ftShowImageResult(out, best, name);
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + '</p>';
+  }
+}
+function ftShowImageResult(out, blob, name){
+  const url = URL.createObjectURL(blob);
+  const wrap = document.createElement('div');
+  const im = document.createElement('img');
+  im.src = url; im.alt = 'Result image preview';
+  im.style.cssText = 'max-width:100%;height:auto;border-radius:10px;margin:10px 0';
+  const btn = document.createElement('button');
+  btn.className = 'btn'; btn.textContent = 'Download ' + name + ' (' + ftSize(blob.size) + ')';
+  btn.onclick = () => ftDownload(blob, name);
+  wrap.appendChild(im); wrap.appendChild(btn);
+  out.appendChild(wrap);
+  window.__ftLastBlob = blob; window.__ftLastName = name;
+}
+
+/* ---------- 17. Image Converter (JPG / PNG / WebP) ---------- */
+let ftConvFile = null;
+function ftConvPick(input){
+  ftConvFile = input.files && input.files[0];
+  const info = $('iv-info');
+  if (!ftConvFile){ info.textContent = ''; return; }
+  info.textContent = 'Selected: ' + ftConvFile.name + ' — ' + ftSize(ftConvFile.size);
+  $('iv-out').innerHTML = '';
+}
+async function ftConvert(){
+  const out = $('iv-out');
+  if (!ftConvFile){ out.innerHTML = '<p>Please choose an image first.</p>'; return; }
+  const format = $('iv-format').value;
+  const ext = format === 'image/png' ? 'png' : (format === 'image/webp' ? 'webp' : 'jpg');
+  const q = parseFloat($('iv-quality').value) || 0.92;
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    const { img, url } = await ftLoadImage(ftConvFile);
+    const cv = document.createElement('canvas');
+    cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+    const ctx = cv.getContext('2d');
+    if (format === 'image/jpeg'){ ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, cv.width, cv.height); }
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    const blob = await ftCanvasBlob(cv, format, q);
+    if (!blob){ out.innerHTML = '<p>Conversion failed — your browser could not create that format.</p>'; return; }
+    const name = ftBase(ftConvFile.name) + '.' + ext;
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftSize(ftConvFile.size) + ' → <strong>' + ftSize(blob.size) + '</strong> (' + ext.toUpperCase() + ').</p>';
+    ftShowImageResult(out, blob, name);
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + '</p>';
+  }
+}
+
+/* ---------- 18. PDF Merge ---------- */
+let ftMergeFiles = [];
+function ftMergePick(input){
+  const out = $('pm-out');
+  Array.from(input.files || []).forEach(f => { if (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) ftMergeFiles.push(f); });
+  input.value = '';
+  ftMergeRender();
+  out.innerHTML = '';
+}
+function ftMergeRender(){
+  const list = $('pm-list');
+  if (!ftMergeFiles.length){ list.innerHTML = '<p class="note">No PDFs added yet.</p>'; return; }
+  list.innerHTML = '';
+  ftMergeFiles.forEach((f, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0';
+    const label = document.createElement('span');
+    label.textContent = (i + 1) + '. ' + f.name + ' (' + ftSize(f.size) + ')';
+    label.style.flex = '1';
+    const up = document.createElement('button'); up.className = 'btn secondary'; up.textContent = '↑ Up';
+    up.onclick = () => { if (i > 0){ [ftMergeFiles[i-1], ftMergeFiles[i]] = [ftMergeFiles[i], ftMergeFiles[i-1]]; ftMergeRender(); } };
+    const dn = document.createElement('button'); dn.className = 'btn secondary'; dn.textContent = '↓ Down';
+    dn.onclick = () => { if (i < ftMergeFiles.length - 1){ [ftMergeFiles[i+1], ftMergeFiles[i]] = [ftMergeFiles[i], ftMergeFiles[i+1]]; ftMergeRender(); } };
+    const rm = document.createElement('button'); rm.className = 'btn secondary'; rm.textContent = 'Remove';
+    rm.onclick = () => { ftMergeFiles.splice(i, 1); ftMergeRender(); };
+    row.appendChild(label); row.appendChild(up); row.appendChild(dn); row.appendChild(rm);
+    list.appendChild(row);
+  });
+}
+async function ftMerge(){
+  const out = $('pm-out');
+  if (ftMergeFiles.length < 2){ out.innerHTML = '<p>Please add at least two PDF files to merge.</p>'; return; }
+  if (typeof PDFLib === 'undefined'){ out.innerHTML = '<p>The PDF library is still loading — check your connection and try again.</p>'; return; }
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    const merged = await PDFLib.PDFDocument.create();
+    let pages = 0;
+    for (const f of ftMergeFiles){
+      const doc = await PDFLib.PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption: true });
+      const copied = await merged.copyPages(doc, doc.getPageIndices());
+      copied.forEach(p => merged.addPage(p));
+      pages += doc.getPageCount();
+    }
+    const bytes = await merged.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftMergeFiles.length + ' PDFs merged into one — ' + pages + ' pages, ' + ftSize(blob.size) + '.</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download merged.pdf';
+    btn.onclick = () => ftDownload(blob, 'merged.pdf');
+    out.appendChild(btn);
+    window.__ftLastBlob = blob; window.__ftLastName = 'merged.pdf';
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + ' — one of the files may be damaged or password-protected.</p>';
+  }
+}
+
+/* ---------- 19. PDF Compress (re-render pages as images) ---------- */
+async function ftCompressPdf(){
+  const out = $('pc-out');
+  const input = $('pc-file');
+  const file = input.files && input.files[0];
+  if (!file){ out.innerHTML = '<p>Please choose a PDF file first.</p>'; return; }
+  if (typeof pdfjsLib === 'undefined' || typeof window.jspdf === 'undefined'){
+    out.innerHTML = '<p>The PDF libraries are still loading — check your connection and try again.</p>'; return;
+  }
+  const level = $('pc-level').value; // high | medium | low compression
+  const conf = { high: { scale: 1.1, q: 0.5 }, medium: { scale: 1.5, q: 0.65 }, low: { scale: 2.0, q: 0.8 } }[level] || { scale: 1.5, q: 0.65 };
+  out.innerHTML = '<p>Working — this can take a moment on long PDFs…</p>';
+  try {
+    const data = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data }).promise;
+    const { jsPDF } = window.jspdf;
+    async function build(c){
+      let doc = null;
+      for (let p = 1; p <= pdf.numPages; p++){
+        const page = await pdf.getPage(p);
+        const base = page.getViewport({ scale: 1 });
+        const vp = page.getViewport({ scale: c.scale });
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, cv.width, cv.height);
+        await page.render({ canvasContext: ctx, viewport: vp }).promise;
+        const imgData = cv.toDataURL('image/jpeg', c.q);
+        if (!doc){
+          doc = new jsPDF({ unit: 'pt', format: [base.width, base.height], orientation: base.width > base.height ? 'landscape' : 'portrait', compress: true });
+        } else {
+          doc.addPage([base.width, base.height], base.width > base.height ? 'landscape' : 'portrait');
+        }
+        doc.addImage(imgData, 'JPEG', 0, 0, base.width, base.height);
+        out.innerHTML = '<p>Working — page ' + p + ' of ' + pdf.numPages + '…</p>';
+      }
+      return doc.output('blob');
+    }
+    let blob = await build(conf);
+    let stronger = false;
+    if (blob.size >= file.size){
+      // automatically retry stronger settings before reporting honestly
+      const tries = [{ scale: 1.0, q: 0.5 }, { scale: 0.8, q: 0.42 }];
+      for (const t of tries){
+        if (t.scale === conf.scale && t.q === conf.q) continue;
+        const b2 = await build(t);
+        if (b2.size < blob.size){ blob = b2; stronger = true; }
+        if (blob.size < file.size) break;
+      }
+    }
+    const saved = file.size - blob.size;
+    if (saved <= 0){
+      out.innerHTML = '<p><strong>Honest result:</strong> even at the strongest setting, the re-rendered version came out at ' + ftSize(blob.size) + ' — no smaller than your original (' + ftSize(file.size) + '). This happens with text-based PDFs, which are already stored very efficiently. Your original file is the better copy to keep.</p>';
+      window.__ftLastBlob = blob; window.__ftLastName = ftBase(file.name) + '-compressed.pdf';
+      return;
+    }
+    const name = ftBase(file.name) + '-compressed.pdf';
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftSize(file.size) + ' → <strong>' + ftSize(blob.size) + '</strong> (' + Math.round(saved / file.size * 100) + '% smaller, ' + pdf.numPages + ' pages)' + (stronger ? ' — a stronger setting was used automatically to beat your original size' : '') + '. Note: pages were re-rendered as images, so text is no longer selectable.</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download ' + name;
+    btn.onclick = () => ftDownload(blob, name);
+    out.appendChild(btn);
+    window.__ftLastBlob = blob; window.__ftLastName = name;
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + ' — the file may be damaged or password-protected.</p>';
+  }
+}
+
+/* ---------- 20. PDF to Word (text-based) ---------- */
+async function ftPdfToWord(){
+  const out = $('pw-out');
+  const input = $('pw-file');
+  const file = input.files && input.files[0];
+  if (!file){ out.innerHTML = '<p>Please choose a PDF file first.</p>'; return; }
+  if (typeof pdfjsLib === 'undefined' || typeof docx === 'undefined'){
+    out.innerHTML = '<p>The conversion libraries are still loading — check your connection and try again.</p>'; return;
+  }
+  out.innerHTML = '<p>Working — reading the text from your PDF…</p>';
+  try {
+    const data = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data }).promise;
+    const children = [];
+    let totalChars = 0;
+    for (let p = 1; p <= pdf.numPages; p++){
+      const page = await pdf.getPage(p);
+      const tc = await page.getTextContent();
+      // group text items into lines by their vertical position
+      const lines = [];
+      let cur = null, curY = null;
+      tc.items.forEach(it => {
+        const y = Math.round(it.transform[5]);
+        if (curY === null || Math.abs(y - curY) > 2){
+          cur = { text: it.str, y };
+          lines.push(cur); curY = y;
+        } else {
+          cur.text += (cur.text.endsWith(' ') || it.str.startsWith(' ') ? '' : ' ') + it.str;
+        }
+      });
+      lines.sort((a, b) => b.y - a.y); // PDF coordinates run bottom-up
+      lines.forEach(l => {
+        const t = l.text.replace(/\s+/g, ' ').trim();
+        if (t){ children.push(new docx.Paragraph({ children: [new docx.TextRun(t)] })); totalChars += t.length; }
+      });
+      if (p < pdf.numPages) children.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
+      out.innerHTML = '<p>Working — page ' + p + ' of ' + pdf.numPages + '…</p>';
+    }
+    if (totalChars < 10){
+      out.innerHTML = '<p><strong>No readable text was found.</strong> This PDF is most likely scanned images — a text-based converter cannot read it. It needs OCR (reading the pictures of the pages), which this free tool does not do.</p>';
+      return;
+    }
+    const doc = new docx.Document({ sections: [{ properties: {}, children }] });
+    const blob = await docx.Packer.toBlob(doc);
+    const name = ftBase(file.name) + '.docx';
+    out.innerHTML = '<p><strong>Done.</strong> Extracted about ' + totalChars.toLocaleString() + ' characters from ' + pdf.numPages + ' page(s) into a Word file (' + ftSize(blob.size) + '). The text is editable; the original layout, tables and images are not carried over.</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download ' + name;
+    btn.onclick = () => ftDownload(blob, name);
+    out.appendChild(btn);
+    window.__ftLastBlob = blob; window.__ftLastName = name;
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + ' — the file may be damaged or password-protected.</p>';
+  }
+}
+
+/* ---------- 21. Word to PDF ---------- */
+async function ftWordToPdf(){
+  const out = $('wp-out');
+  const input = $('wp-file');
+  const file = input.files && input.files[0];
+  if (!file){ out.innerHTML = '<p>Please choose a .docx file first.</p>'; return; }
+  if (!/\.docx$/i.test(file.name)){
+    out.innerHTML = '<p>This tool reads <strong>.docx</strong> files (Word 2007 and later). Old .doc files need to be saved as .docx first — in Word or Google Docs: File → Save as → Word (.docx).</p>'; return;
+  }
+  if (typeof mammoth === 'undefined' || typeof html2pdf === 'undefined'){
+    out.innerHTML = '<p>The conversion libraries are still loading — check your connection and try again.</p>'; return;
+  }
+  out.innerHTML = '<p>Working — converting your document…</p>';
+  try {
+    const result = await mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+    const holder = $('wp-render');
+    holder.innerHTML = result.value || '<p>(The document appears to be empty.)</p>';
+    const name = ftBase(file.name) + '.pdf';
+    const opt = {
+      margin: 12,
+      filename: name,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    };
+    const blob = await html2pdf().set(opt).from(holder).outputPdf('blob');
+    out.innerHTML = '<p><strong>Done.</strong> Your PDF is ready (' + name + ', ' + ftSize(blob.size) + '). Formatting stays close to the original for normal documents; complex tables, text boxes and exact page breaks can differ.</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download ' + name;
+    btn.onclick = () => ftDownload(blob, name);
+    out.appendChild(btn);
+    window.__ftLastBlob = blob; window.__ftLastName = name;
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + ' — the file may be damaged, or it may not be a real .docx file.</p>';
+  }
+}
+
+/* ============================================================
+   FILE TOOLS (22–26) — added 2026-11-07 (second batch)
+   ============================================================ */
+
+/* ---------- 22. Image Resizer ---------- */
+let ftResFile = null, ftResNat = { w: 0, h: 0 };
+function ftResPick(input){
+  ftResFile = input.files && input.files[0];
+  const info = $('ir-info');
+  $('ir-out').innerHTML = '';
+  if (!ftResFile){ info.textContent = ''; return; }
+  ftLoadImage(ftResFile).then(({ img, url }) => {
+    ftResNat = { w: img.naturalWidth, h: img.naturalHeight };
+    URL.revokeObjectURL(url);
+    info.textContent = 'Selected: ' + ftResFile.name + ' — ' + ftResNat.w + ' × ' + ftResNat.h + ' px, ' + ftSize(ftResFile.size);
+    $('ir-w').value = ftResNat.w; $('ir-h').value = ftResNat.h;
+  }).catch(e => { info.textContent = e.message; });
+}
+function ftResSync(from){
+  if (!ftResNat.w) return;
+  const lock = $('ir-lock').checked;
+  const w = parseInt($('ir-w').value, 10), h = parseInt($('ir-h').value, 10);
+  if (lock && from === 'w' && w > 0) $('ir-h').value = Math.max(1, Math.round(w * ftResNat.h / ftResNat.w));
+  if (lock && from === 'h' && h > 0) $('ir-w').value = Math.max(1, Math.round(h * ftResNat.w / ftResNat.h));
+  if (from === 'pct'){
+    const p = parseFloat($('ir-pct').value);
+    if (p > 0){ $('ir-w').value = Math.max(1, Math.round(ftResNat.w * p / 100)); $('ir-h').value = Math.max(1, Math.round(ftResNat.h * p / 100)); }
+  }
+}
+async function ftResize(){
+  const out = $('ir-out');
+  if (!ftResFile){ out.innerHTML = '<p>Please choose an image first.</p>'; return; }
+  const w = parseInt($('ir-w').value, 10), h = parseInt($('ir-h').value, 10);
+  if (!w || !h || w < 1 || h < 1){ out.innerHTML = '<p>Please enter valid width and height in pixels.</p>'; return; }
+  let format = $('ir-format').value;
+  if (format === 'same') format = ftResFile.type === 'image/png' ? 'image/png' : (ftResFile.type === 'image/webp' ? 'image/webp' : 'image/jpeg');
+  const ext = format === 'image/png' ? 'png' : (format === 'image/webp' ? 'webp' : 'jpg');
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    const { img, url } = await ftLoadImage(ftResFile);
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const ctx = cv.getContext('2d');
+    if (format === 'image/jpeg'){ ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); }
+    ctx.drawImage(img, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+    const blob = await ftCanvasBlob(cv, format, 0.92);
+    const name = ftBase(ftResFile.name) + '-' + w + 'x' + h + '.' + ext;
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftResNat.w + ' × ' + ftResNat.h + ' → <strong>' + w + ' × ' + h + '</strong> px (' + ftSize(blob.size) + ').</p>';
+    ftShowImageResult(out, blob, name);
+  } catch(e){ out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + '</p>'; }
+}
+
+/* ---------- 23. Image Cropper ---------- */
+let ftCrop = null; // {file,img,url,natW,natH, sel:{x,y,w,h} in display px, dispW,dispH}
+function ftCropPick(input){
+  const file = input.files && input.files[0];
+  const out = $('icp-out'); out.innerHTML = '';
+  if (!file) return;
+  ftLoadImage(file).then(({ img, url }) => {
+    ftCrop = { file, img, url, natW: img.naturalWidth, natH: img.naturalHeight, sel: null };
+    const stage = $('icp-stage'), pic = $('icp-img');
+    pic.src = url;
+    stage.style.display = 'block';
+    requestAnimationFrame(() => {
+      const dw = pic.clientWidth, dh = pic.clientHeight;
+      ftCrop.dispW = dw; ftCrop.dispH = dh;
+      const s = { x: dw * 0.1, y: dh * 0.1, w: dw * 0.8, h: dh * 0.8 };
+      ftCrop.sel = s; ftCropDrawSel();
+      $('icp-info').textContent = 'Image: ' + ftCrop.natW + ' × ' + ftCrop.natH + ' px. Drag the box to move it, drag the corner to resize.';
+    });
+  }).catch(e => { out.innerHTML = '<p>' + esc(e.message) + '</p>'; });
+}
+function ftCropDrawSel(){
+  if (!ftCrop || !ftCrop.sel) return;
+  const box = $('icp-sel'), s = ftCrop.sel;
+  box.style.display = 'block';
+  box.style.left = s.x + 'px'; box.style.top = s.y + 'px';
+  box.style.width = s.w + 'px'; box.style.height = s.h + 'px';
+  const rx = ftCrop.natW / ftCrop.dispW, ry = ftCrop.natH / ftCrop.dispH;
+  $('icp-size').textContent = 'Crop area: ' + Math.round(s.w * rx) + ' × ' + Math.round(s.h * ry) + ' px';
+}
+function ftCropAspect(){
+  if (!ftCrop || !ftCrop.sel) return;
+  const v = $('icp-aspect').value;
+  if (v === 'free') return;
+  const [aw, ah] = v.split(':').map(Number);
+  const s = ftCrop.sel;
+  s.h = s.w * ah / aw;
+  if (s.y + s.h > ftCrop.dispH){ s.h = ftCrop.dispH - s.y; s.w = s.h * aw / ah; }
+  ftCropDrawSel();
+}
+function ftCropPointer(){
+  const box = $('icp-sel'), handle = $('icp-handle');
+  let drag = null;
+  function down(e, mode){
+    if (!ftCrop) return;
+    e.preventDefault();
+    const pt = e.touches ? e.touches[0] : e;
+    drag = { mode, sx: pt.clientX, sy: pt.clientY, sel: { ...ftCrop.sel } };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  }
+  function move(e){
+    if (!drag || !ftCrop) return;
+    const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy, s = ftCrop.sel, S = drag.sel;
+    if (drag.mode === 'move'){
+      s.x = Math.min(Math.max(0, S.x + dx), ftCrop.dispW - s.w);
+      s.y = Math.min(Math.max(0, S.y + dy), ftCrop.dispH - s.h);
+    } else {
+      s.w = Math.min(Math.max(24, S.w + dx), ftCrop.dispW - s.x);
+      s.h = Math.min(Math.max(24, S.h + dy), ftCrop.dispH - s.y);
+      const av = $('icp-aspect').value;
+      if (av !== 'free'){ const [aw, ah] = av.split(':').map(Number); s.h = s.w * ah / aw; if (s.y + s.h > ftCrop.dispH){ s.h = ftCrop.dispH - s.y; s.w = s.h * aw / ah; } }
+    }
+    ftCropDrawSel();
+  }
+  function up(){ drag = null; document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); }
+  box.addEventListener('pointerdown', e => down(e, 'move'));
+  handle.addEventListener('pointerdown', e => { e.stopPropagation(); down(e, 'resize'); });
+}
+async function ftDoCrop(){
+  const out = $('icp-out');
+  if (!ftCrop || !ftCrop.sel){ out.innerHTML = '<p>Please choose an image first.</p>'; return; }
+  const s = ftCrop.sel, rx = ftCrop.natW / ftCrop.dispW, ry = ftCrop.natH / ftCrop.dispH;
+  const sx = Math.round(s.x * rx), sy = Math.round(s.y * ry);
+  const sw = Math.max(1, Math.round(s.w * rx)), sh = Math.max(1, Math.round(s.h * ry));
+  const format = $('icp-format').value;
+  const ext = format === 'image/png' ? 'png' : 'jpg';
+  const cv = document.createElement('canvas'); cv.width = sw; cv.height = sh;
+  const ctx = cv.getContext('2d');
+  if (format === 'image/jpeg'){ ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, sw, sh); }
+  ctx.drawImage(ftCrop.img, sx, sy, sw, sh, 0, 0, sw, sh);
+  const blob = await ftCanvasBlob(cv, format, 0.92);
+  const name = ftBase(ftCrop.file.name) + '-crop-' + sw + 'x' + sh + '.' + ext;
+  out.innerHTML = '<p><strong>Done.</strong> Cropped to <strong>' + sw + ' × ' + sh + '</strong> px (' + ftSize(blob.size) + ').</p>';
+  ftShowImageResult(out, blob, name);
+}
+
+/* ---------- 24. Image to PDF ---------- */
+let ftI2pFiles = [];
+function ftI2pPick(input){
+  Array.from(input.files || []).forEach(f => { if (/^image\//.test(f.type)) ftI2pFiles.push(f); });
+  input.value = '';
+  const info = $('ip-info');
+  info.innerHTML = ftI2pFiles.length
+    ? ftI2pFiles.map((f, i) => (i + 1) + '. ' + esc(f.name) + ' (' + ftSize(f.size) + ')').join('<br>')
+    : '';
+  $('ip-out').innerHTML = '';
+}
+async function ftImagesToPdf(){
+  const out = $('ip-out');
+  if (!ftI2pFiles.length){ out.innerHTML = '<p>Please add at least one image.</p>'; return; }
+  if (typeof window.jspdf === 'undefined'){ out.innerHTML = '<p>The PDF library is still loading — check your connection and try again.</p>'; return; }
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    const { jsPDF } = window.jspdf;
+    let doc = null;
+    for (const f of ftI2pFiles){
+      const { img, url } = await ftLoadImage(f);
+      const wMm = img.naturalWidth * 25.4 / 96, hMm = img.naturalHeight * 25.4 / 96;
+      const orient = wMm > hMm ? 'landscape' : 'portrait';
+      if (!doc) doc = new jsPDF({ unit: 'mm', format: [wMm, hMm], orientation: orient });
+      else doc.addPage([wMm, hMm], orient);
+      const type = f.type === 'image/png' ? 'PNG' : 'JPEG';
+      doc.addImage(img, type, 0, 0, wMm, hMm);
+      URL.revokeObjectURL(url);
+    }
+    const blob = doc.output('blob');
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftI2pFiles.length + ' image(s) → one PDF (' + ftSize(blob.size) + ').</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download images.pdf';
+    btn.onclick = () => ftDownload(blob, 'images.pdf');
+    out.appendChild(btn);
+    window.__ftLastBlob = blob; window.__ftLastName = 'images.pdf';
+  } catch(e){ out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + '</p>'; }
+}
+
+/* ---------- 25. PDF to Images ---------- */
+let ftP2iPages = []; // {blob, name}
+async function ftPdfToImages(){
+  const out = $('pi-out'), grid = $('pi-grid');
+  const file = $('pi-file').files && $('pi-file').files[0];
+  if (!file){ out.innerHTML = '<p>Please choose a PDF file first.</p>'; return; }
+  if (typeof pdfjsLib === 'undefined'){ out.innerHTML = '<p>The PDF library is still loading — check your connection and try again.</p>'; return; }
+  const format = $('pi-format').value; // image/png or image/jpeg
+  const ext = format === 'image/png' ? 'png' : 'jpg';
+  const scale = parseFloat($('pi-scale').value) || 2;
+  out.innerHTML = '<p>Working…</p>'; grid.innerHTML = ''; ftP2iPages = [];
+  try {
+    const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+    for (let p = 1; p <= pdf.numPages; p++){
+      const page = await pdf.getPage(p);
+      const vp = page.getViewport({ scale });
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, cv.width, cv.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      const blob = await ftCanvasBlob(cv, format, 0.92);
+      const name = ftBase(file.name) + '-page-' + p + '.' + ext;
+      ftP2iPages.push({ blob, name });
+      const card = document.createElement('div');
+      card.style.cssText = 'border:1px solid #e2e8f0;border-radius:10px;padding:10px';
+      const im = document.createElement('img');
+      im.src = URL.createObjectURL(blob); im.alt = 'Page ' + p;
+      im.style.cssText = 'width:100%;height:auto;border-radius:6px';
+      const b = document.createElement('button');
+      b.className = 'btn secondary'; b.textContent = 'Page ' + p + ' — ' + ftSize(blob.size);
+      b.onclick = () => ftDownload(blob, name);
+      card.appendChild(im); card.appendChild(b);
+      grid.appendChild(card);
+      out.innerHTML = '<p>Working — page ' + p + ' of ' + pdf.numPages + '…</p>';
+    }
+    out.innerHTML = '<p><strong>Done.</strong> ' + pdf.numPages + ' page(s) converted to ' + ext.toUpperCase() + '. Download pages one by one, or all together as a ZIP.</p>';
+    if (typeof JSZip !== 'undefined' && ftP2iPages.length > 1){
+      const zb = document.createElement('button');
+      zb.className = 'btn'; zb.textContent = 'Download all as ZIP';
+      zb.onclick = async () => {
+        const zip = new JSZip();
+        ftP2iPages.forEach(pg => zip.file(pg.name, pg.blob));
+        const zblob = await zip.generateAsync({ type: 'blob' });
+        ftDownload(zblob, ftBase(file.name) + '-images.zip');
+      };
+      out.appendChild(zb);
+    }
+    window.__ftLastBlob = ftP2iPages[0] && ftP2iPages[0].blob;
+    window.__ftLastName = ftP2iPages[0] && ftP2iPages[0].name;
+  } catch(e){ out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + ' — the file may be damaged or password-protected.</p>'; }
+}
+
+/* ---------- 26. Blur Tool (full image + background via segmentation) ---------- */
+let ftBlur = { file: null, img: null, url: null, mask: null, seg: null, segReady: false };
+function ftBlurPick(input){
+  const f = input.files && input.files[0];
+  $('bl-out').innerHTML = '';
+  if (!f) return;
+  ftLoadImage(f).then(({ img, url }) => {
+    ftBlur.file = f; ftBlur.img = img; ftBlur.url = url; ftBlur.mask = null;
+    $('bl-info').textContent = 'Selected: ' + f.name + ' — ' + img.naturalWidth + ' × ' + img.naturalHeight + ' px, ' + ftSize(f.size);
+    ftBlurDraw();
+  }).catch(e => { $('bl-out').innerHTML = '<p>' + esc(e.message) + '</p>'; });
+}
+function ftBlurMode(){
+  const m = document.querySelector('input[name="bl-mode"]:checked');
+  return m ? m.value : 'full';
+}
+async function ftBlurEnsureSeg(statusEl){
+  if (ftBlur.segReady) return true;
+  if (typeof SelfieSegmentation === 'undefined') return false;
+  statusEl.innerHTML = '<p>Loading the people-detection model (one-time download)…</p>';
+  ftBlur.seg = new SelfieSegmentation({ locateFile: f => 'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/' + f });
+  ftBlur.seg.setOptions({ modelSelection: 1 });
+  ftBlur.seg.onResults(res => { ftBlur.mask = res.segmentationMask; ftBlurDraw(); });
+  await ftBlur.seg.send({ image: ftBlur.img });
+  ftBlur.segReady = true;
+  return true;
+}
+async function ftBlurDraw(){
+  const out = $('bl-out');
+  if (!ftBlur.img) return;
+  const strength = parseInt($('bl-strength').value, 10) || 10;
+  $('bl-strength-val').textContent = strength + ' px';
+  const img = ftBlur.img, w = img.naturalWidth, h = img.naturalHeight;
+  const mode = ftBlurMode();
+  if (mode === 'background' && !ftBlur.mask){
+    const ok = await ftBlurEnsureSeg(out).catch(() => false);
+    if (!ok || !ftBlur.mask){
+      out.innerHTML = '<p><strong>Background blur could not start</strong> — the people-detection model did not load (connection or browser support). Full-image blur below still works: switch the mode to “Whole image”.</p>';
+      return;
+    }
+  }
+  const base = document.createElement('canvas'); base.width = w; base.height = h;
+  const bctx = base.getContext('2d');
+  bctx.filter = 'blur(' + strength + 'px)';
+  bctx.drawImage(img, -strength, -strength, w + strength * 2, h + strength * 2);
+  bctx.filter = 'none';
+  const cv = $('bl-canvas');
+  cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d');
+  if (mode === 'background' && ftBlur.mask){
+    ctx.drawImage(base, 0, 0);
+    // person cut-out: original image masked by the segmentation mask
+    const person = document.createElement('canvas'); person.width = w; person.height = h;
+    const pctx = person.getContext('2d');
+    pctx.drawImage(ftBlur.mask, 0, 0, w, h);
+    pctx.globalCompositeOperation = 'source-in';
+    pctx.drawImage(img, 0, 0);
+    ctx.drawImage(person, 0, 0);
+  } else {
+    ctx.drawImage(base, 0, 0);
+  }
+  cv.style.display = 'block';
+}
+function ftBlurDownload(){
+  const out = $('bl-out');
+  if (!ftBlur.img){ out.innerHTML = '<p>Please choose an image first.</p>'; return; }
+  $('bl-canvas').toBlob(blob => {
+    const name = ftBase(ftBlur.file.name) + '-blurred.png';
+    ftDownload(blob, name);
+    window.__ftLastBlob = blob; window.__ftLastName = name;
+    out.innerHTML = '<p><strong>Done.</strong> Blurred image downloaded (' + ftSize(blob.size) + ').</p>';
+  }, 'image/png');
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Image Converter — JPG to PNG, PNG to JPG, WebP — ToolNest</title>
+<meta name="description" content="Convert images between JPG, PNG and WebP in your browser. Free, no sign-up, no upload — your file never leaves your device.">
+<link rel="canonical" href="https://free-ai-tools-website.pages.dev/tools/image-converter.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ToolNest">
+<meta property="og:title" content="Free Image Converter — JPG to PNG, PNG to JPG, WebP — ToolNest">
+<meta property="og:description" content="Convert images between JPG, PNG and WebP in your browser. Free, no sign-up, no upload — your file never leaves your device.">
+<meta property="og:url" content="https://free-ai-tools-website.pages.dev/tools/image-converter.html">
+<meta property="og:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Image Converter — JPG to PNG, PNG to JPG, WebP — ToolNest">
+<meta name="twitter:description" content="Convert images between JPG, PNG and WebP in your browser. Free, no sign-up, no upload — your file never leaves your device.">
+<meta name="twitter:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › PDF &amp; Image Tools</p>
+<h1>Image Converter — JPG · PNG · WebP</h1>
+<p class="desc">Convert any picture between JPG, PNG and WebP. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server.</p><figure><img src="../assets/img/files.svg" alt="Image Converter — JPG · PNG · WebP — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Image Converter — JPG · PNG · WebP — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Choose an image</label><input id="iv-file" type="file" accept="image/*" onchange="ftConvPick(this)">
+<p class="note" id="iv-info"></p>
+<label>Convert to</label><select id="iv-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp" selected>WebP</option></select>
+<label>Quality (JPG / WebP only)</label><input id="iv-quality" type="number" min="0.1" max="1" step="0.01" value="0.92">
+<button class="btn" onclick="ftConvert()">Convert image</button>
+<div class="output" id="iv-out"></div>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>JPG is for photos.</strong> Small files, accepted everywhere, no transparency. The default choice for anything a portal, marketplace or email asks for.</li>
+<li><strong>PNG is for graphics and transparency.</strong> Logos, screenshots with text and anything with a transparent background stay crisp in PNG — at a bigger file size.</li>
+<li><strong>WebP is for your own website.</strong> Same quality as JPG at a noticeably smaller size, which makes pages load faster. All modern browsers support it.</li>
+<li><strong>Converting to JPG removes transparency.</strong> Transparent areas are placed on white. If a logo must stay transparent, convert to PNG or WebP instead.</li>
+<li><strong>Converting up does not add quality.</strong> A blurry JPG converted to PNG is still blurry — just bigger. Convert from the best original you have.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Screenshots for documents: PNG keeps text readable where JPG gets fuzzy around letters.</li>
+<li>Product photos for a shop: WebP at quality 0.85 is the sweet spot most stores use.</li>
+<li>Keep one master copy in PNG; make JPG/WebP copies for each place you publish.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is my image uploaded anywhere?</summary><p>No. Conversion happens in your browser with your own device. Nothing is uploaded or stored.</p></details>
+<details><summary>Why is my PNG bigger than the JPG?</summary><p>PNG keeps every pixel exactly, which is heavy for photographs. That is expected — PNG is for graphics, screenshots and transparency, JPG/WebP are for photos.</p></details>
+<details><summary>Can I convert a WebP back to JPG?</summary><p>Yes — JPG, PNG and WebP can all be converted to any of the other two.</p></details>
+<details><summary>What happens to transparent backgrounds?</summary><p>Converting to JPG fills transparency with white, because JPG cannot store transparency. PNG and WebP keep it.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Every online seller, blogger and freelancer hits format problems weekly: a marketplace that only takes JPG, a website slowed down by PNG photos, a client who sends WebP files nothing opens. Knowing which format fits which job — and fixing it in seconds — is a quiet, billable micro-skill inside design, listing and content work.</p>
+<p>The free tool above does the full job. No account, no watermark, no upload.</p>
+<a class="cta" href="../learn/product-descriptions-that-sell.html">Read: product pages that convert →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="image-compressor.html"><h3>Image Compressor</h3><p>Hit an exact KB target.</p></a>
+<a class="card" href="image-resizer.html"><h3>Image Resizer</h3><p>Exact pixels or percentage.</p></a>
+<a class="card" href="background-remover.html"><h3>Background Remover</h3><p>Transparent cut-outs in the browser.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

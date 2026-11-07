@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Image Compressor to Exact KB Size (25KB, 50KB, 100KB) — ToolNest</title>
+<meta name="description" content="Compress a JPG, PNG or WebP photo to an exact target size — 25KB, 50KB, 100KB or custom. Perfect for online application portals. Free, no sign-up, 100% in your browser.">
+<link rel="canonical" href="https://free-ai-tools-website.pages.dev/tools/image-compressor.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ToolNest">
+<meta property="og:title" content="Free Image Compressor to Exact KB Size (25KB, 50KB, 100KB) — ToolNest">
+<meta property="og:description" content="Compress a JPG, PNG or WebP photo to an exact target size — 25KB, 50KB, 100KB or custom. Perfect for online application portals. Free, no sign-up, 100% in your browser.">
+<meta property="og:url" content="https://free-ai-tools-website.pages.dev/tools/image-compressor.html">
+<meta property="og:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Image Compressor to Exact KB Size (25KB, 50KB, 100KB) — ToolNest">
+<meta name="twitter:description" content="Compress a JPG, PNG or WebP photo to an exact target size — 25KB, 50KB, 100KB or custom. Perfect for online application portals. Free, no sign-up, 100% in your browser.">
+<meta name="twitter:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › PDF &amp; Image Tools</p>
+<h1>Image Compressor — to Exact KB Size</h1>
+<p class="desc">Shrink a photo to the exact size a form demands — 25 KB for application portals, 50 KB, 100 KB, or any custom target. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server.</p><figure><img src="../assets/img/files.svg" alt="Image Compressor — to Exact KB Size — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Image Compressor — to Exact KB Size — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Choose an image (JPG, PNG or WebP)</label><input id="ic-file" type="file" accept="image/*" onchange="ftCompPick(this)">
+<p class="note" id="ic-info"></p>
+<label>Target size</label><select id="ic-target"><option value="25">25 KB</option><option value="50" selected>50 KB</option><option value="100">100 KB</option><option value="200">200 KB</option><option value="500">500 KB</option><option value="custom">Custom…</option></select>
+<label>Custom target (KB) — only if “Custom” is selected</label><input id="ic-custom" type="number" min="5" placeholder="e.g. 30">
+<label>Output format</label><select id="ic-format"><option value="image/jpeg" selected>JPEG (best for small sizes)</option><option value="image/webp">WebP (even smaller, widely supported)</option></select>
+<button class="btn" onclick="ftCompress()">Compress to target size</button>
+<div class="output" id="ic-out"></div>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Check the portal's exact limit first.</strong> Many application and exam portals reject photos above 25 KB or 30 KB, and some also demand exact pixel dimensions. Hit the size here, then use the Image Resizer if the pixels must match too.</li>
+<li><strong>Start from the best original you have.</strong> Compression removes detail. A sharp, well-lit original compressed to 25 KB looks better than a blurry photo at any size.</li>
+<li><strong>Plain backgrounds compress smaller.</strong> Busy backgrounds (trees, crowds, patterns) hold detail the algorithm must keep. A plain wall behind the subject reaches tiny sizes without hurting the face.</li>
+<li><strong>JPEG for photos, WebP for the web.</strong> JPEG is accepted everywhere, including government portals. WebP is smaller still but some older systems refuse it — when in doubt, JPEG.</li>
+<li><strong>Never compress the only copy.</strong> Keep your original untouched and upload the compressed copy. You cannot get the removed detail back.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>If a portal asks for 25 KB and a passport-style photo, crop tight to the head and shoulders first — less background means more quality left for the face.</li>
+<li>Scanned documents compress worse than camera photos. If a scan will not shrink, re-scan at 150–200 DPI instead of 600.</li>
+<li>Test the upload on the portal before the deadline day. Portals measure size strictly, and a 25.4 KB file fails a 25 KB limit.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is my photo uploaded to your server?</summary><p>No. The compression runs entirely in your browser using your own device. Your photo never leaves your computer or phone, and nothing is stored anywhere.</p></details>
+<details><summary>Why did the dimensions change?</summary><p>To reach very small targets like 25 KB, quality reduction alone is sometimes not enough, so the tool also shrinks the pixel dimensions step by step until the file fits. It always reports the final size before you download.</p></details>
+<details><summary>Can I compress to exactly 25 KB?</summary><p>The tool targets at or just under your chosen size — the closest it can get while keeping the most quality. File formats cannot promise an exact byte count, but the result will be within your limit.</p></details>
+<details><summary>Does it work for PNG images?</summary><p>Yes — PNG photos are converted to JPEG or WebP, because PNG cannot reach small sizes for photographs. Logos with transparency should use the Image Converter instead if transparency must be kept.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Anyone who has applied for a government job, a university place or a visa knows the photo-size rejection screen. Local photo studios and application agents charge for exactly this one-minute job — hitting a portal's size limit. With this tool you do it yourself in seconds, and if you help applicants in your area, “documents ready to upload, first attempt accepted” is a small service people gladly pay for.</p>
+<p>The free tool above does the full job. No account, no watermark, no upload.</p>
+<a class="cta" href="../learn/study-mode.html">Read: how to study and apply smarter →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="image-resizer.html"><h3>Image Resizer</h3><p>Exact pixels or percentage.</p></a>
+<a class="card" href="image-converter.html"><h3>Image Converter</h3><p>JPG, PNG and WebP conversion.</p></a>
+<a class="card" href="image-cropper.html"><h3>Image Cropper</h3><p>Crop tight before you compress.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

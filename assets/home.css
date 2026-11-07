@@ -49,6 +49,7 @@ body.home .wrap{max-width:1140px}
 .ic-writing{background:#e7f8f0;color:#059669}
 .ic-marketing{background:#fdeef5;color:#db2777}
 .ic-finance{background:#fdf3e3;color:#b45309}
+.ic-files{background:#e6f4fd;color:#0369a1}
 
 /* ---------- Popular strip ---------- */
 .popgrid{display:grid;grid-template-columns:1fr;gap:14px}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Image Cropper — Crop Photos Online with Aspect Presets — ToolNest</title>
+<meta name="description" content="Crop an image by dragging a selection box — free, square, 4:3, 3:2 and 16:9 presets. 100% in your browser, no upload.">
+<link rel="canonical" href="https://free-ai-tools-website.pages.dev/tools/image-cropper.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ToolNest">
+<meta property="og:title" content="Free Image Cropper — Crop Photos Online with Aspect Presets — ToolNest">
+<meta property="og:description" content="Crop an image by dragging a selection box — free, square, 4:3, 3:2 and 16:9 presets. 100% in your browser, no upload.">
+<meta property="og:url" content="https://free-ai-tools-website.pages.dev/tools/image-cropper.html">
+<meta property="og:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Image Cropper — Crop Photos Online with Aspect Presets — ToolNest">
+<meta name="twitter:description" content="Crop an image by dragging a selection box — free, square, 4:3, 3:2 and 16:9 presets. 100% in your browser, no upload.">
+<meta name="twitter:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › PDF &amp; Image Tools</p>
+<h1>Image Cropper — Drag & Crop</h1>
+<p class="desc">Cut away what does not belong and keep what matters. Drag the box, pull the corner, download. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server.</p><figure><img src="../assets/img/files.svg" alt="Image Cropper — Drag & Crop — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Image Cropper — Drag & Crop — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Choose an image</label><input id="icp-file" type="file" accept="image/*" onchange="ftCropPick(this)">
+<label>Aspect ratio</label><select id="icp-aspect" onchange="ftCropAspect()"><option value="free" selected>Free</option><option value="1:1">1:1 (square)</option><option value="4:3">4:3</option><option value="3:2">3:2</option><option value="16:9">16:9 (wide)</option><option value="3:4">3:4 (portrait / ID style)</option></select>
+<div id="icp-stage" style="display:none;position:relative;max-width:640px;margin:14px 0;line-height:0">
+<img id="icp-img" alt="Image to crop" style="width:100%;height:auto;border-radius:8px">
+<div id="icp-sel" style="display:none;position:absolute;border:2px solid #2563eb;box-shadow:0 0 0 9999px rgba(15,23,42,.45);cursor:move;touch-action:none">
+<div id="icp-handle" style="position:absolute;right:-10px;bottom:-10px;width:20px;height:20px;background:#2563eb;border:2px solid #fff;border-radius:50%;cursor:nwse-resize;touch-action:none"></div>
+</div>
+</div>
+<p class="note" id="icp-info"></p>
+<p class="note" id="icp-size"></p>
+<label>Output format</label><select id="icp-format"><option value="image/jpeg" selected>JPG</option><option value="image/png">PNG</option></select>
+<button class="btn" onclick="ftDoCrop()">Crop &amp; prepare download</button>
+<div class="output" id="icp-out"></div>
+</div>
+<script>document.addEventListener("DOMContentLoaded", function(){ ftCropPointer(); });</script>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Crop for the subject, not the scene.</strong> Most photos improve by removing the outer third. Faces and products should fill the frame the way they fill your attention.</li>
+<li><strong>Match the ratio to the destination.</strong> Squares for marketplace grids and profile pictures, 16:9 for video thumbnails and banners, 3:4 for ID-style and passport photos. Cropping to the right ratio stops platforms from doing it badly for you.</li>
+<li><strong>Leave a little breathing room.</strong> Subjects touching the frame edge look accidental. A small margin reads as deliberate.</li>
+<li><strong>Crop before you compress or resize.</strong> Order matters: framing first, then pixel size, then file size. Each step keeps the quality the next one needs.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>For ID-style photos, head and shoulders centred, eyes near the upper third — that is the framing officials expect.</li>
+<li>Straighten mentally: a horizon that tilts 3 degrees distracts more than any other flaw. Re-shoot if the tilt is strong.</li>
+<li>The download is at full original resolution of the selected area — what you select is exactly what you get.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is my image uploaded anywhere?</summary><p>No. Cropping runs in your browser; the image never leaves your device.</p></details>
+<details><summary>How precise is the crop?</summary><p>The box maps exactly to the original image's pixels, and the tool reports the crop size in real pixels before you download.</p></details>
+<details><summary>Can I type exact numbers instead of dragging?</summary><p>Dragging with the aspect presets covers most jobs. For exact pixel dimensions afterwards, pass the crop through the Image Resizer.</p></details>
+<details><summary>Does cropping reduce quality?</summary><p>The selected area keeps its original pixels and quality. Cropping only discards what is outside the box.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Framing is the cheapest upgrade in visual work: the same photo, cropped well, sells better, reads better and passes portal checks. Photographers and listing specialists crop as a reflex. If you prepare product photos or application photos for others, a tight, correct-ratio crop is part of the craft you are paid for.</p>
+<p>The free tool above does the full job. No account, no watermark, no upload.</p>
+<a class="cta" href="../learn/product-descriptions-that-sell.html">Read: product pages that convert →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="image-resizer.html"><h3>Image Resizer</h3><p>Exact pixels after cropping.</p></a>
+<a class="card" href="image-compressor.html"><h3>Image Compressor</h3><p>Then hit the KB limit.</p></a>
+<a class="card" href="background-remover.html"><h3>Background Remover</h3><p>Cut the subject out entirely.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free PDF to Word Converter — Extract Editable Text (.docx) — ToolNest</title>
+<meta name="description" content="Convert a PDF into an editable Word (.docx) file in your browser. Text-based conversion — layout is not preserved. Free, no sign-up, no upload.">
+<link rel="canonical" href="https://free-ai-tools-website.pages.dev/tools/pdf-to-word.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ToolNest">
+<meta property="og:title" content="Free PDF to Word Converter — Extract Editable Text (.docx) — ToolNest">
+<meta property="og:description" content="Convert a PDF into an editable Word (.docx) file in your browser. Text-based conversion — layout is not preserved. Free, no sign-up, no upload.">
+<meta property="og:url" content="https://free-ai-tools-website.pages.dev/tools/pdf-to-word.html">
+<meta property="og:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free PDF to Word Converter — Extract Editable Text (.docx) — ToolNest">
+<meta name="twitter:description" content="Convert a PDF into an editable Word (.docx) file in your browser. Text-based conversion — layout is not preserved. Free, no sign-up, no upload.">
+<meta name="twitter:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › PDF &amp; Image Tools</p>
+<h1>PDF to Word — Editable Text (.docx)</h1>
+<p class="desc">Pull the text out of a PDF into an editable Word document. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server. Honest note: this is a text-based conversion — paragraphs are recovered, but the original layout, tables and images are not.</p><figure><img src="../assets/img/files.svg" alt="PDF to Word — Editable Text (.docx) — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">PDF to Word — Editable Text (.docx) — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Choose a PDF</label><input id="pw-file" type="file" accept="application/pdf,.pdf">
+<button class="btn" onclick="ftPdfToWord()">Convert to Word</button>
+<div class="output" id="pw-out"></div>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Best for typed PDFs.</strong> Reports, articles, e-books and letters created on a computer convert cleanly. Scanned PDFs are pictures of text — they need OCR, which this tool does not do (it tells you when a PDF has no readable text).</li>
+<li><strong>Expect to tidy up.</strong> Headings, columns and tables come out as plain paragraphs in reading order. Budget a few minutes to re-apply heading styles in Word.</li>
+<li><strong>Two-column layouts read across.</strong> Academic papers with two columns may interleave lines. Short of OCR software, selecting and copying from the original PDF column by column is the workaround.</li>
+<li><strong>Check numbers carefully.</strong> Amounts, dates and ID numbers are the details that matter most in converted documents — verify them against the original.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Converting your own old report back to Word beats retyping it — even an imperfect conversion is 90% of the work done.</li>
+<li>For a CV locked in PDF, convert, then rebuild it properly with the Resume Builder instead of fighting the layout.</li>
+<li>Keep the original PDF beside the Word file until you have checked the full text once.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is my PDF uploaded to a server?</summary><p>No. The text is extracted inside your browser. Your file never leaves your device.</p></details>
+<details><summary>Why does the Word file look different from the PDF?</summary><p>This is a text-based conversion: it recovers the words and their order, not the visual layout. Fonts, columns, tables and images from the original are not carried over. For a faithful visual copy, the PDF itself is the document to share.</p></details>
+<details><summary>Why did it find no text?</summary><p>Your PDF is most likely scanned images. Scanned pages are photographs of text and need OCR (optical character recognition), which this free tool honestly does not offer.</p></details>
+<details><summary>Can it convert a password-protected PDF?</summary><p>No. Remove the password first if the document is yours, then convert.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Clients constantly need “this PDF, but editable”: old reports, contracts, course notes, CVs. Retyping is the slow, expensive answer everyone dreads. A fast, honest text extraction — plus ten minutes of tidying — is a small data-entry and admin service freelancers sell every day on Fiverr and Upwork.</p>
+<p>The free tool above does the full job. No account, no watermark, no upload.</p>
+<a class="cta" href="../learn/freelance-pricing.html">Read: how to price admin work →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="word-to-pdf.html"><h3>Word to PDF</h3><p>The reverse direction.</p></a>
+<a class="card" href="pdf-to-images.html"><h3>PDF to Images</h3><p>Pages as pictures instead.</p></a>
+<a class="card" href="text-summarizer.html"><h3>Text Summarizer</h3><p>Shorten the extracted text.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+<script src="../assets/tools.js"></script>
+</body>
+</html>
