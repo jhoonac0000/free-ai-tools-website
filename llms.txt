@@ -1,0 +1,59 @@
+# ToolNest
+
+> ToolNest offers 27 free online tools that run entirely in the visitor's browser — no sign-up, no uploads to a server, files never leave the device. Tools cover PDF work, image editing, career and business documents, and writing and social media generators. The site also publishes free "Learn" guides on using these tools well.
+
+Site: https://free-ai-tools-website.pages.dev/
+
+## PDF Tools
+
+- [PDF Merge](https://free-ai-tools-website.pages.dev/tools/pdf-merge.html): Combine two or more PDF files into a single PDF, in your chosen order.
+- [PDF Compressor](https://free-ai-tools-website.pages.dev/tools/pdf-compress.html): Reduce PDF file size online.
+- [PDF to Word Converter](https://free-ai-tools-website.pages.dev/tools/pdf-to-word.html): Extract editable text from a PDF into a .docx Word document.
+- [Word to PDF Converter](https://free-ai-tools-website.pages.dev/tools/word-to-pdf.html): Convert a .docx Word document to PDF.
+- [Image to PDF Converter](https://free-ai-tools-website.pages.dev/tools/image-to-pdf.html): Turn JPG/PNG photos into one PDF.
+- [PDF to Images](https://free-ai-tools-website.pages.dev/tools/pdf-to-images.html): Convert PDF pages to JPG or PNG images.
+
+## Image Tools
+
+- [Image Compressor](https://free-ai-tools-website.pages.dev/tools/image-compressor.html): Compress an image to an exact KB target size (25KB, 50KB, 100KB and custom).
+- [Image Converter](https://free-ai-tools-website.pages.dev/tools/image-converter.html): Convert between JPG, PNG and WebP.
+- [Image Resizer](https://free-ai-tools-website.pages.dev/tools/image-resizer.html): Resize an image by pixels or percentage.
+- [Image Cropper](https://free-ai-tools-website.pages.dev/tools/image-cropper.html): Crop photos online with aspect-ratio presets.
+- [Background Remover](https://free-ai-tools-website.pages.dev/tools/background-remover.html): Remove an image background and download a transparent PNG.
+- [Blur Tool](https://free-ai-tools-website.pages.dev/tools/blur-background.html): Blur a whole image or blur the background of a photo.
+
+## Career & Business Tools
+
+- [Resume Builder + Cover Letter Generator](https://free-ai-tools-website.pages.dev/tools/resume-builder.html): Build a professional resume with templates, live preview and free PDF download.
+- [Invoice Generator](https://free-ai-tools-website.pages.dev/tools/invoice-generator.html): Create invoices for freelancers.
+- [Freelance Rate Calculator](https://free-ai-tools-website.pages.dev/tools/freelance-rate.html): Work out a sustainable freelance hourly/project rate.
+- [Loan, Mortgage & Tax Calculators](https://free-ai-tools-website.pages.dev/tools/loan-calculator.html): Loan, mortgage and freelancer tax estimates.
+- [Business Name + Slogan Generator](https://free-ai-tools-website.pages.dev/tools/business-name.html): Generate business name and slogan ideas.
+- [Real Estate Listing Description Generator](https://free-ai-tools-website.pages.dev/tools/real-estate.html): Generate property listing descriptions.
+- [Etsy / Amazon Product Description Generator](https://free-ai-tools-website.pages.dev/tools/etsy-description.html): Generate product descriptions for online sellers.
+
+## Writing & Social Tools
+
+- [Blog Title + Outline Generator](https://free-ai-tools-website.pages.dev/tools/blog-generator.html): Blog title ideas and outlines.
+- [Cold Email + Subject Line Generator](https://free-ai-tools-website.pages.dev/tools/cold-email.html): Cold outreach emails and subject lines.
+- [LinkedIn Headline + Bio Generator](https://free-ai-tools-website.pages.dev/tools/linkedin-generator.html): LinkedIn headlines and bios.
+- [Instagram Caption + Bio Generator](https://free-ai-tools-website.pages.dev/tools/instagram-generator.html): Instagram captions and bios.
+- [YouTube Title, Description & Hashtag Generator](https://free-ai-tools-website.pages.dev/tools/youtube-generator.html): YouTube titles, descriptions and hashtags.
+- [Paraphraser + Grammar Checker](https://free-ai-tools-website.pages.dev/tools/paraphraser.html): Rephrase text and check grammar.
+- [Text Summarizer](https://free-ai-tools-website.pages.dev/tools/text-summarizer.html): Shorten long text into a summary.
+- [Meeting Notes Summarizer](https://free-ai-tools-website.pages.dev/tools/meeting-notes.html): Turn meeting notes into a clear summary.
+
+## Learn Guides
+
+- [Learn hub](https://free-ai-tools-website.pages.dev/learn.html): Free guides on resumes, freelance pricing, product descriptions, YouTube titles and study techniques.
+- [Study Mode](https://free-ai-tools-website.pages.dev/learn/study-mode.html)
+- [A Resume That Gets Interviews](https://free-ai-tools-website.pages.dev/learn/resume-that-gets-interviews.html)
+- [Freelance Pricing](https://free-ai-tools-website.pages.dev/learn/freelance-pricing.html)
+- [Product Descriptions That Sell](https://free-ai-tools-website.pages.dev/learn/product-descriptions-that-sell.html)
+- [YouTube Titles That Get Clicks](https://free-ai-tools-website.pages.dev/learn/youtube-titles-that-get-clicks.html)
+
+## About
+
+- [About ToolNest](https://free-ai-tools-website.pages.dev/about.html)
+- [Contact](https://free-ai-tools-website.pages.dev/contact.html)
+- [Privacy Policy](https://free-ai-tools-website.pages.dev/privacy.html): All tools run locally in the browser; files are never uploaded.
