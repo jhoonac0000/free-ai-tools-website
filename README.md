@@ -36,3 +36,8 @@
 2. Copy any `tools/*.html` page, replace the toolbox + Learn + FAQ + Earn sections, keep the same structure.
 3. Add its card to `index.html` (with `data-cat`, `data-name`, `data-desc`) and a line to `sitemap.xml`.
 4. Keep the rule: tool first, Learn second, Earn third, related tools last, no dead ends.
+
+## Update 2026-11-07 — PDF & Image Tools (12 added, tools 16–27)
+New category "PDF & Image Tools" (data-cat="files"), all 100% client-side like the rest:
+Image Compressor (exact KB target — binary-search quality + downscale), Image Converter (JPG/PNG/WebP), Image Resizer, Image Cropper (draggable box + aspect presets), Background Remover (@imgly/background-removal browser build — model downloads once, photo never uploaded), Blur Tool (full blur + background blur via MediaPipe SelfieSegmentation), PDF Merge (pdf-lib), PDF Compress (pdf.js render + jsPDF rebuild, auto stronger-retry, honest "keep original" path), PDF to Word (pdf.js text → docx, text-based, no layout), Word to PDF (mammoth → html2pdf), Image to PDF (jsPDF), PDF to Images (pdf.js + optional JSZip).
+Libraries load per-page from CDN (unpkg/jsdelivr/cdnjs); logic lives in `assets/tools.js` sections 16–26 (+ inline ESM on the background remover page). Every tool was tested locally with real files (Puppeteer) before push: all 12 passed, incl. background-remover subject alpha test and background-blur person test on a real photo. Homepage now shows 27 tools / 5 categories; sitemap has all 27 tool URLs.
