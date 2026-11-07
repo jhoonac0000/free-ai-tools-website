@@ -529,7 +529,7 @@ async function ftCompressPdf(){
   }
 }
 
-/* ---------- 20. PDF to Word (text-based) ---------- */
+/* ---------- 20. PDF to Word (position-aware: headings, bold, alignment, images, header/footer) ---------- */
 async function ftPdfToWord(){
   const out = $('pw-out');
   const input = $('pw-file');
@@ -538,43 +538,249 @@ async function ftPdfToWord(){
   if (typeof pdfjsLib === 'undefined' || typeof docx === 'undefined'){
     out.innerHTML = '<p>The conversion libraries are still loading — check your connection and try again.</p>'; return;
   }
-  out.innerHTML = '<p>Working — reading the text from your PDF…</p>';
+  out.innerHTML = '<p>Working — reading your PDF…</p>';
   try {
     const data = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data }).promise;
-    const children = [];
-    let totalChars = 0;
+    const OPS = pdfjsLib.OPS || {};
+
+    // --- helpers (kept inside this function so nothing else on the page is affected) ---
+    // real font names (e.g. "Helvetica-Bold") live on the loaded font objects, not in tc.styles
+    async function fontNameMap(page, tc){
+      const map = {}, ids = {};
+      tc.items.forEach(it => { ids[it.fontName] = 1; });
+      const label = f => f ? ((f.name || '') + (f.bold ? ' Bold' : '') + (f.italic ? ' Italic' : '')) : '';
+      for (const id of Object.keys(ids)){
+        try { map[id] = label(page.commonObjs.get(id)); } catch(e){ map[id] = ''; }
+        if (!map[id]){
+          map[id] = await new Promise(res => {
+            let done = false; const fin = v => { if (!done){ done = true; res(v); } };
+            try { page.commonObjs.get(id, f => fin(label(f))); } catch(e){ fin(''); }
+            setTimeout(() => fin(''), 1200);
+          });
+        }
+        if (!map[id]){ const s = tc.styles && tc.styles[id]; map[id] = (s && s.fontFamily) || id; }
+      }
+      return map;
+    }
+    const sizeOf = it => { const t = it.transform; const s = Math.hypot(t[2], t[3]); return s > 0 ? s : (it.height || 12); };
+
+    function imgToPng(img){
+      return new Promise(res => {
+        try {
+          if (img && img.bitmap){
+            const c = document.createElement('canvas');
+            c.width = img.width || img.bitmap.width; c.height = img.height || img.bitmap.height;
+            c.getContext('2d').drawImage(img.bitmap, 0, 0);
+            c.toBlob(b => b ? b.arrayBuffer().then(ab => res({ data: ab, w: c.width, h: c.height })) : res(null), 'image/png');
+            return;
+          }
+          if (!img || !img.data || !img.width || !img.height){ res(null); return; }
+          const w = img.width, h = img.height, src = img.data, kind = img.kind; // pdf.js ImageKind: 1 gray, 2 RGB, 3 RGBA
+          const c = document.createElement('canvas'); c.width = w; c.height = h;
+          const ctx = c.getContext('2d'); const idata = ctx.createImageData(w, h); const d = idata.data;
+          for (let i = 0, j = 0; i < w * h; i++){
+            if (kind === 1){ const g = src[i]; d[j++] = g; d[j++] = g; d[j++] = g; d[j++] = 255; }
+            else if (kind === 3){ d[j++] = src[i*4]; d[j++] = src[i*4+1]; d[j++] = src[i*4+2]; d[j++] = src[i*4+3]; }
+            else { d[j++] = src[i*3]; d[j++] = src[i*3+1]; d[j++] = src[i*3+2]; d[j++] = 255; }
+          }
+          ctx.putImageData(idata, 0, 0);
+          c.toBlob(b => b ? b.arrayBuffer().then(ab => res({ data: ab, w, h })) : res(null), 'image/png');
+        } catch(e){ res(null); }
+      });
+    }
+    function getImg(page, name){
+      return new Promise(res => {
+        let done = false; const fin = v => { if (!done){ done = true; res(v); } };
+        try { page.objs.get(name, v => fin(v)); } catch(e){ fin(null); }
+        setTimeout(() => fin(null), 4000);
+      });
+    }
+    async function pageImages(page){
+      const imgs = [];
+      try {
+        const opList = await page.getOperatorList();
+        let ctm = [1,0,0,1,0,0]; const stack = [];
+        const mul = (m, n) => [ m[0]*n[0] + m[2]*n[1], m[1]*n[0] + m[3]*n[1], m[0]*n[2] + m[2]*n[3], m[1]*n[2] + m[3]*n[3], m[0]*n[4] + m[2]*n[5] + m[4], m[1]*n[4] + m[3]*n[5] + m[5] ];
+        for (let i = 0; i < opList.fnArray.length; i++){
+          const fn = opList.fnArray[i], args = opList.argsArray[i];
+          if (fn === OPS.save) stack.push(ctm.slice());
+          else if (fn === OPS.restore){ if (stack.length) ctm = stack.pop(); }
+          else if (fn === OPS.transform) ctm = mul(ctm, args);
+          else if (fn === OPS.paintImageXObject || fn === OPS.paintJpegXObject || fn === OPS.paintInlineImageXObject){
+            const cs = [[0,0],[1,0],[0,1],[1,1]].map(pt => [ctm[0]*pt[0] + ctm[2]*pt[1] + ctm[4], ctm[1]*pt[0] + ctm[3]*pt[1] + ctm[5]]);
+            const xs = cs.map(c => c[0]), ys = cs.map(c => c[1]);
+            const rec = { x: Math.min.apply(null, xs), yTop: Math.max.apply(null, ys), wPt: Math.max.apply(null, xs) - Math.min.apply(null, xs), hPt: Math.max.apply(null, ys) - Math.min.apply(null, ys) };
+            const raw = (fn === OPS.paintInlineImageXObject) ? args[0] : await getImg(page, args[0]);
+            const png = raw ? await imgToPng(raw) : null;
+            if (png && rec.wPt > 4 && rec.hPt > 4){ rec.png = png; imgs.push(rec); }
+          }
+        }
+      } catch(e){ /* images are best-effort — the text still converts */ }
+      return imgs;
+    }
+
+    let totalChars = 0, totalImages = 0;
+    const bodyChildren = [];
+    let headerParas = null, footerParas = null, docHasHeader = false, docHasFooter = false;
+
     for (let p = 1; p <= pdf.numPages; p++){
       const page = await pdf.getPage(p);
+      const vp = page.getViewport({ scale: 1 });
+      const pageW = vp.width, pageH = vp.height;
+      // a light render first: pdf.js only resolves the real font data (names, bold/italic) once a page has been painted
+      try {
+        const rv = page.getViewport({ scale: 0.25 });
+        const rc = document.createElement('canvas'); rc.width = rv.width; rc.height = rv.height;
+        await page.render({ canvasContext: rc.getContext('2d'), viewport: rv }).promise;
+      } catch(e){ /* best-effort — conversion continues without it */ }
       const tc = await page.getTextContent();
-      // group text items into lines by their vertical position
-      const lines = [];
-      let cur = null, curY = null;
+      const fnames = await fontNameMap(page, tc);
+
+      // group items into lines, keeping each run's own formatting
+      const rawLines = [];
       tc.items.forEach(it => {
+        if (!it.str) return;
         const y = Math.round(it.transform[5]);
-        if (curY === null || Math.abs(y - curY) > 2){
-          cur = { text: it.str, y };
-          lines.push(cur); curY = y;
-        } else {
-          cur.text += (cur.text.endsWith(' ') || it.str.startsWith(' ') ? '' : ' ') + it.str;
+        let line = null;
+        for (const L of rawLines){ if (Math.abs(L.y - y) <= 2){ line = L; break; } }
+        if (!line){ line = { y, runs: [], x0: it.transform[4], x1: it.transform[4] + (it.width || 0), size: 0 }; rawLines.push(line); }
+        const fam = fnames[it.fontName] || '';
+        line.runs.push({ text: it.str, bold: /bold/i.test(fam), ital: /italic|oblique/i.test(fam), size: sizeOf(it) });
+        line.x0 = Math.min(line.x0, it.transform[4]);
+        line.x1 = Math.max(line.x1, it.transform[4] + (it.width || 0));
+        line.size = Math.max(line.size, sizeOf(it));
+      });
+      rawLines.sort((a, b) => b.y - a.y); // PDF coordinates run bottom-up
+      rawLines.forEach(L => { L.text = L.runs.map(r => r.text).join(' ').replace(/\s+/g, ' ').trim(); });
+      const lines = rawLines.filter(L => L.text);
+
+      const imgs = await pageImages(page);
+      const inHeader = y => y > pageH - 92, inFooter = y => y < 72;
+      const runsOf = L => {
+        const arr = []; let prevEndsSpace = true;
+        L.runs.forEach(r => {
+          let t = r.text;
+          if (!prevEndsSpace && t && !/^\s/.test(t)) t = ' ' + t;
+          prevEndsSpace = /\s$/.test(t) || t === '';
+          arr.push(new docx.TextRun({ text: t, bold: r.bold || undefined, italics: r.ital || undefined }));
+        });
+        return arr;
+      };
+
+      // body font size first (from all lines): a running header/footer is small text —
+      // a big line in the top band is a document title and must stay in the body
+      const freqAll = {}; lines.forEach(L => { const s = Math.round(L.size); freqAll[s] = (freqAll[s] || 0) + L.text.length; });
+      let bodySizeAll = 12, bestAll = -1; Object.keys(freqAll).forEach(s => { if (freqAll[s] > bestAll){ bestAll = freqAll[s]; bodySizeAll = +s; } });
+      const isHeaderLine = L => inHeader(L.y) && L.size <= bodySizeAll + 1;
+      const isFooterLine = L => inFooter(L.y) && L.size <= bodySizeAll + 1;
+
+      // page 1's top/bottom bands become a real Word header/footer
+      if (p === 1){
+        const hLines = lines.filter(isHeaderLine);
+        const fLines = lines.filter(isFooterLine);
+        const hImgs = imgs.filter(im => inHeader(im.yTop - im.hPt / 2));
+        if (hLines.length || hImgs.length){
+          docHasHeader = true; headerParas = [];
+          hImgs.forEach(im => {
+            const wPx = Math.min(170, Math.max(24, Math.round(im.wPt * 4 / 3)));
+            headerParas.push(new docx.Paragraph({ children: [new docx.ImageRun({ data: im.png.data, transformation: { width: wPx, height: Math.round(wPx * im.png.h / im.png.w) } })] }));
+            totalImages++;
+          });
+          hLines.forEach(L => headerParas.push(new docx.Paragraph({ children: runsOf(L) })));
         }
+        if (fLines.length){
+          docHasFooter = true;
+          footerParas = fLines.map(L => new docx.Paragraph({ alignment: docx.AlignmentType.CENTER, children: runsOf(L) }));
+        }
+      }
+      const bandImg = im => (im.yTop - im.hPt / 2);
+      const bodyLines = lines.filter(L => {
+        if (p === 1) return !isHeaderLine(L) && !isFooterLine(L);
+        if (docHasHeader && inHeader(L.y)) return false;
+        if (docHasFooter && inFooter(L.y)) return false;
+        return true;
       });
-      lines.sort((a, b) => b.y - a.y); // PDF coordinates run bottom-up
-      lines.forEach(l => {
-        const t = l.text.replace(/\s+/g, ' ').trim();
-        if (t){ children.push(new docx.Paragraph({ children: [new docx.TextRun(t)] })); totalChars += t.length; }
+      const bodyImgs = imgs.filter(im => {
+        if (p === 1) return !inHeader(bandImg(im)) && !inFooter(bandImg(im));
+        if (docHasHeader && inHeader(bandImg(im))) return false;
+        if (docHasFooter && inFooter(bandImg(im))) return false;
+        return true;
       });
-      if (p < pdf.numPages) children.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
+
+      // body font size = the size carrying the most text on this page
+      const freq = {}; bodyLines.forEach(L => { const s = Math.round(L.size); freq[s] = (freq[s] || 0) + L.text.length; });
+      let bodySize = 12, best = -1; Object.keys(freq).forEach(s => { if (freq[s] > best){ best = freq[s]; bodySize = +s; } });
+
+      const els = [];
+      bodyLines.forEach(L => els.push({ kind: 'line', y: L.y, L }));
+      bodyImgs.forEach(im => els.push({ kind: 'img', y: im.yTop, im }));
+      els.sort((a, b) => b.y - a.y);
+
+      const alignOf = L => { const c = (L.x0 + L.x1) / 2; return (Math.abs(c - pageW / 2) < 26 && L.x0 > 36) ? docx.AlignmentType.CENTER : undefined; };
+      let cur = null, prev = null;
+      const flush = () => { if (cur && cur.runs.length){ bodyChildren.push(new docx.Paragraph({ children: cur.runs })); } cur = null; };
+
+      for (const el of els){
+        if (el.kind === 'img'){
+          flush();
+          const wPx = Math.min(620, Math.max(24, Math.round(el.im.wPt * 4 / 3)));
+          const cx = el.im.x + el.im.wPt / 2;
+          const al = Math.abs(cx - pageW / 2) < 30 ? docx.AlignmentType.CENTER : (el.im.x > pageW * 0.55 ? docx.AlignmentType.RIGHT : undefined);
+          bodyChildren.push(new docx.Paragraph({ alignment: al, children: [new docx.ImageRun({ data: el.im.png.data, transformation: { width: wPx, height: Math.round(wPx * el.im.png.h / el.im.png.w) } })] }));
+          totalImages++; prev = el; continue;
+        }
+        const L = el.L, ratio = bodySize ? L.size / bodySize : 1;
+        const mkRuns = forHeading => {
+          const arr = []; let prevEndsSpace = true;
+          L.runs.forEach(r => {
+            let t = r.text;
+            if (!prevEndsSpace && t && !/^\s/.test(t)) t = ' ' + t;
+            prevEndsSpace = /\s$/.test(t) || t === '';
+            const o = { text: t, bold: r.bold || undefined, italics: r.ital || undefined };
+            if (!forHeading && Math.round(r.size) !== Math.round(bodySize)) o.size = Math.round(r.size * 2);
+            arr.push(new docx.TextRun(o));
+          });
+          return arr;
+        };
+        if (ratio >= 1.22){
+          flush();
+          bodyChildren.push(new docx.Paragraph({ heading: ratio >= 1.42 ? docx.HeadingLevel.HEADING_1 : docx.HeadingLevel.HEADING_2, alignment: alignOf(L), children: mkRuns(true) }));
+          totalChars += L.text.length; prev = el; continue;
+        }
+        const gap = (prev && prev.kind === 'line') ? (prev.L.y - L.y) : 999;
+        if (cur && gap <= L.size * 1.9 && !alignOf(L)){
+          const extra = mkRuns(false);
+          cur.runs.push(new docx.TextRun(' '));
+          extra.forEach(r => cur.runs.push(r));
+          totalChars += L.text.length + 1;
+        } else if (alignOf(L)){
+          flush();
+          bodyChildren.push(new docx.Paragraph({ alignment: alignOf(L), children: mkRuns(false) }));
+          totalChars += L.text.length;
+        } else {
+          flush();
+          cur = { runs: mkRuns(false) };
+          totalChars += L.text.length;
+        }
+        prev = el;
+      }
+      flush();
+      if (p < pdf.numPages) bodyChildren.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
       out.innerHTML = '<p>Working — page ' + p + ' of ' + pdf.numPages + '…</p>';
     }
+
     if (totalChars < 10){
       out.innerHTML = '<p><strong>No readable text was found.</strong> This PDF is most likely scanned images — a text-based converter cannot read it. It needs OCR (reading the pictures of the pages), which this free tool does not do.</p>';
       return;
     }
-    const doc = new docx.Document({ sections: [{ properties: {}, children }] });
+    const section = { properties: {}, children: bodyChildren };
+    if (headerParas) section.headers = { default: new docx.Header({ children: headerParas }) };
+    if (footerParas) section.footers = { default: new docx.Footer({ children: footerParas }) };
+    const doc = new docx.Document({ sections: [section] });
     const blob = await docx.Packer.toBlob(doc);
     const name = ftBase(file.name) + '.docx';
-    out.innerHTML = '<p><strong>Done.</strong> Extracted about ' + totalChars.toLocaleString() + ' characters from ' + pdf.numPages + ' page(s) into a Word file (' + ftSize(blob.size) + '). The text is editable; the original layout, tables and images are not carried over.</p>';
+    out.innerHTML = '<p><strong>Done.</strong> Converted about ' + totalChars.toLocaleString() + ' characters' + (totalImages ? ' and ' + totalImages + ' image(s)' : '') + ' from ' + pdf.numPages + ' page(s) into a Word file (' + ftSize(blob.size) + '). Headings, bold text, alignment, headers/footers and images are carried over where the PDF has them; the exact layout, columns and table borders are not.</p>';
     const btn = document.createElement('button');
     btn.className = 'btn'; btn.textContent = 'Download ' + name;
     btn.onclick = () => ftDownload(blob, name);
