@@ -64,10 +64,10 @@
     },
     {
       "@type": "Question",
-      "name": "Why did my text stop being selectable?",
+      "name": "Will my text stay selectable?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "To shrink a PDF in the browser, pages are re-rendered as images. The document looks the same and prints the same, but the text becomes part of the picture. Do not compress a PDF you still need to copy text from — keep the original for that."
+        "text": "With Smart mode (the default), yes — completely. Smart mode rebuilds the file without re-rendering a single page, so every word stays copyable and searchable. Only Strong mode gives up selectable text: it re-renders pages as pictures to squeeze scans down as far as possible."
       }
     },
     {
@@ -75,7 +75,7 @@
       "name": "Why did my file get bigger?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Text-based PDFs are already stored very efficiently. Re-rendering them as images can make them larger. The tool detects this and tells you to keep your original instead."
+        "text": "Smart mode can only remove waste — metadata, file-structure overhead and oversized embedded photos. A tightly made text PDF may have almost none of that, so there is honestly nothing to save without turning pages into pictures (Strong mode). When that happens the tool tells you plainly and you keep your original."
       }
     },
     {
@@ -98,10 +98,12 @@
 <div class="wrap toolpage">
 <p class="breadcrumb"><a href="../index.html">Tools</a> › <a href="../category/pdf-image-tools.html">PDF &amp; Image Tools</a></p>
 <h1>PDF Compressor — Reduce File Size</h1>
-<p class="desc">Shrink a PDF so it fits a portal's upload limit. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server. Be aware: this tool re-renders pages as high-quality images, so text is no longer selectable afterwards — best for scanned and image-heavy PDFs.</p><figure><img src="../assets/img/files.svg" alt="PDF Compressor — Reduce File Size — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">PDF Compressor — Reduce File Size — illustration</figcaption></figure>
+<p class="desc">Shrink a PDF so it fits a portal's upload limit. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server. The default Smart mode keeps your text fully selectable and searchable; Strong mode is there when a scan must get as small as possible and selectable text does not matter.</p><figure><img src="../assets/img/files.svg" alt="PDF Compressor — Reduce File Size — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">PDF Compressor — Reduce File Size — illustration</figcaption></figure>
 <div class="toolbox">
 <label>Choose a PDF</label><input id="pc-file" type="file" accept="application/pdf,.pdf">
-<label>Compression level</label><select id="pc-level"><option value="low">Light — best quality</option><option value="medium" selected>Balanced</option><option value="high">Strongest — smallest file</option></select>
+<label>Mode</label><select id="pc-mode"><option value="smart" selected>Smart — keeps text selectable (recommended)</option><option value="strong">Strong — smallest file, pages become images</option></select>
+<label>Strong mode strength (only used by Strong mode)</label><select id="pc-level"><option value="low">Light — best quality</option><option value="medium" selected>Balanced</option><option value="high">Strongest — smallest file</option></select>
+<p class="note"><strong>Smart mode</strong> rebuilds the file without touching the pages — text stays copyable and searchable, metadata is stripped and oversized embedded photos are shrunk; how much you save depends on how the file was made. <strong>Strong mode</strong> re-renders every page as a picture: far smaller for scans, but the text becomes part of the image and can no longer be selected or searched.</p>
 <button class="btn" onclick="ftCompressPdf()">Compress PDF</button>
 <div class="output" id="pc-out"></div>
 </div>
@@ -109,22 +111,22 @@
 <h2>Learn: how to use this well</h2>
 <ol>
 <li><strong>Scanned PDFs compress best.</strong> A 20 MB scan is mostly oversized images — that is where the big savings are. A typed, text-only PDF is already efficient and may not shrink at all; the tool tells you honestly if so.</li>
-<li><strong>Start with Balanced.</strong> It keeps pages clearly readable for applications and statements. Use Strongest only when a hard upload limit forces it.</li>
+<li><strong>Start with Smart.</strong> It is the default for a reason: your text stays selectable, and for most real files that is worth more than the last few KB. Switch to Strong only for scans and photo-heavy files where a hard upload limit forces it.</li>
 <li><strong>Read the result before you submit.</strong> Open the compressed file and check the smallest text — an ID number or a grade must still be readable by a human.</li>
 <li><strong>Keep the original.</strong> Compression is one-way. Archive the full-quality file and submit the compressed copy.</li>
 </ol>
 <h3>Pro tips</h3>
 <ul>
 <li>Over a portal limit by a little? Split instead: compress only the scanned pages' document, keep typed documents original, then merge.</li>
-<li>Bank statements for visas: Balanced keeps stamps and signatures believable; Strongest can make them look tampered with.</li>
+<li>Bank statements for visas: if you must use Strong mode, Light or Balanced keeps stamps and signatures believable; Strongest can make them look tampered with.</li>
 <li>If the result is bigger than the original (it happens with text PDFs), the tool says so — keep your original.</li>
 </ul>
 </div>
 <div class="faq">
 <h2>Frequently asked questions</h2>
 <details><summary>Is my PDF uploaded anywhere?</summary><p>No. Compression runs in your browser on your device. Nothing is uploaded or stored.</p></details>
-<details><summary>Why did my text stop being selectable?</summary><p>To shrink a PDF in the browser, pages are re-rendered as images. The document looks the same and prints the same, but the text becomes part of the picture. Do not compress a PDF you still need to copy text from — keep the original for that.</p></details>
-<details><summary>Why did my file get bigger?</summary><p>Text-based PDFs are already stored very efficiently. Re-rendering them as images can make them larger. The tool detects this and tells you to keep your original instead.</p></details>
+<details><summary>Will my text stay selectable?</summary><p>With Smart mode (the default), yes — completely. Smart mode rebuilds the file without re-rendering a single page, so every word stays copyable and searchable. Only Strong mode gives up selectable text: it re-renders pages as pictures to squeeze scans down as far as possible.</p></details>
+<details><summary>Why did my file get bigger?</summary><p>Smart mode can only remove waste — metadata, file-structure overhead and oversized embedded photos. A tightly made text PDF may have almost none of that, so there is honestly nothing to save without turning pages into pictures (Strong mode). When that happens the tool tells you plainly and you keep your original.</p></details>
 <details><summary>Will officials accept a compressed PDF?</summary><p>For normal applications, yes — as long as every word and number stays readable. Always open the result and check the finest print before submitting.</p></details>
 </div>
 <div class="earn">
@@ -147,6 +149,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="../assets/tools.js"></script>
 </body>
 </html>

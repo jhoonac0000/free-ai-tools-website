@@ -83,7 +83,7 @@
       "name": "Can I rearrange the order?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The PDF follows the order you added the images. Remove the set (reload the page) and add them again in the right order if needed."
+        "text": "Yes — every image in the list has Up and Down buttons. The PDF is built in exactly the order shown, top first, and you can also remove an image you added by mistake."
       }
     }
   ]
@@ -101,7 +101,10 @@
 <p class="desc">Turn phone photos and scans into one clean PDF — the format every portal and office actually wants. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server.</p><figure><img src="../assets/img/files.svg" alt="Image to PDF — Photos into One PDF — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Image to PDF — Photos into One PDF — illustration</figcaption></figure>
 <div class="toolbox">
 <label>Add images (JPG or PNG — you can add more than once)</label><input id="ip-file" type="file" accept="image/*" multiple onchange="ftI2pPick(this)">
+<div id="ip-list"></div>
 <p class="note" id="ip-info"></p>
+<label>Page size</label><select id="ip-size"><option value="a4" selected>A4 (210 × 297 mm) — the office standard</option><option value="letter">Letter (216 × 279 mm) — US standard</option><option value="fit">Fit to image — each page is the image's own size</option></select>
+<label>Margin</label><select id="ip-margin"><option value="0">None — image fills the page</option><option value="10" selected>Small — 10 mm</option><option value="20">Normal — 20 mm</option></select>
 <button class="btn" onclick="ftImagesToPdf()">Make PDF</button>
 <div class="output" id="ip-out"></div>
 </div>
@@ -115,7 +118,7 @@
 </ol>
 <h3>Pro tips</h3>
 <ul>
-<li>Each image becomes a page sized to the image itself — nothing is stretched or squeezed.</li>
+<li>On A4 or Letter, each image is fitted inside the margins without stretching or squeezing — wide photos turn their page sideways automatically. Choose “Fit to image” if you want each page to be exactly the image's own size instead.</li>
 <li>For text documents, portrait photos make portrait pages; mixed orientations are kept as photographed.</li>
 <li>Open the finished PDF once before sending. You are looking for the page you would be embarrassed by.</li>
 </ul>
@@ -125,7 +128,7 @@
 <details><summary>Are my images uploaded anywhere?</summary><p>No. The PDF is built in your browser on your device. Nothing is uploaded or stored.</p></details>
 <details><summary>How many images can I add?</summary><p>As many as your device handles comfortably. For very long sets on older phones, build the PDF in two parts and merge them with the PDF Merge tool.</p></details>
 <details><summary>Will the PDF be huge?</summary><p>It carries your photos at their original quality, so it can be. Compress the images first if a portal's limit is tight.</p></details>
-<details><summary>Can I rearrange the order?</summary><p>The PDF follows the order you added the images. Remove the set (reload the page) and add them again in the right order if needed.</p></details>
+<details><summary>Can I rearrange the order?</summary><p>Yes — every image in the list has Up and Down buttons. The PDF is built in exactly the order shown, top first, and you can also remove an image you added by mistake.</p></details>
 </div>
 <div class="earn">
 <h2>Earn: how this skill pays</h2>

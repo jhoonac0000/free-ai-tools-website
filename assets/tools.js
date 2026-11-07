@@ -54,7 +54,7 @@ function buildCold(){
     `Helping ${theirs} get more customers`,
     `${theirs}: a small change with a real result?`
   ];
-  const body = `Hi there,\n\nI noticed ${biz} and had one specific idea for you: ${offer}.\n\nMost businesses like yours lose enquiries because of one small gap — and fixing it usually takes less than a week. Would you be open to a quick 10-minute look at what that gap is for ${theirs}?\n\nNo pressure at all — if it is not a fit, I will leave you alone.\n\nBest regards,\n${name || 'Your Name'}`;
+  const body = `Hi there,\n\nI came across ${theirs} and had one specific idea for you: ${offer}.\n\nI run ${biz}. Most businesses like yours lose enquiries because of one small gap — and fixing it usually takes less than a week. Would you be open to a quick 10-minute look at what that gap is for ${theirs}?\n\nNo pressure at all — if it is not a fit, I will leave you alone.\n\nBest regards,\n${name || 'Your Name'}`;
   out('c-out', 'SUBJECT LINES\n' + subjects.map((s,i)=>`${i+1}. ${s}`).join('\n') + '\n\nEMAIL\n' + body);
 }
 
@@ -139,27 +139,118 @@ function summarize(){
 }
 
 /* ---------- 8. Paraphraser + Grammar Checker ---------- */
-const SYN = {good:['great','excellent','strong'], bad:['poor','weak','unfavourable'], big:['large','huge','massive'], small:['tiny','compact','little'], fast:['quick','rapid','swift'], important:['crucial','vital','essential'], help:['assist','support','guide'], make:['create','build','produce'], use:['utilize','apply','employ'], show:['demonstrate','display','reveal'], happy:['delighted','pleased','glad'], learn:['master','discover','grasp'], work:['effort','labour','task'], easy:['simple','straightforward','effortless'], hard:['difficult','challenging','tough']};
+/* Safe rewording, in three layers:
+   1) Whole-phrase swaps whose grammar cannot break ("in order to" → "to").
+   2) Verb swaps matched to the EXACT inflected form (uses→utilizes, used→utilized),
+      so tense and subject–verb agreement are preserved by construction.
+   3) A small set of adjectives/nouns with true one-word equivalents.
+   Guards keep noun uses out of the verb layer ("the use of…", "used car") and
+   phrasal verbs intact ("get up" never becomes "obtain up"). */
+const PARA_PHRASES = [
+  ['in spite of the fact that', 'although'], ['due to the fact that', 'because'],
+  ['in order to', 'to'], ['so as to', 'to'],
+  ['a large number of', 'many'], ['a lot of', 'many'], ['lots of', 'many'],
+  ['has the ability to', 'can'], ['have the ability to', 'can'],
+  ['is able to', 'can'], ['are able to', 'can'], ['was able to', 'could'], ['were able to', 'could'],
+  ['in the event that', 'if'], ['at this point in time', 'now'], ['at the present time', 'currently'],
+  ['in the near future', 'soon'], ['prior to', 'before'], ['subsequent to', 'after'],
+  ['in addition to', 'besides'], ['with regard to', 'about'], ['in regards to', 'about'],
+  ['take into consideration', 'consider'], ['takes into consideration', 'considers'], ['took into consideration', 'considered'],
+  ['make a decision', 'decide'], ['makes a decision', 'decides'], ['made a decision', 'decided'],
+  ['make sure', 'ensure'], ['makes sure', 'ensures'], ['make use of', 'use'],
+  ['first of all', 'first'], ['as a result of', 'because of'], ['on a daily basis', 'daily'],
+  ['each and every', 'each'], ['by the way', 'incidentally'], ['in my opinion', 'in my view']
+];
+/* [base, -s, past, -ing] → [base, -s, past, -ing]. Every cell is swapped only
+   for the identical cell, so agreement and tense survive by construction. */
+const PARA_VERBS = [
+  ['use','uses','used','using','utilize','utilizes','utilized','utilizing'],
+  ['make','makes','made','making','create','creates','created','creating'],
+  ['help','helps','helped','helping','assist','assists','assisted','assisting'],
+  ['show','shows','showed','showing','display','displays','displayed','displaying'],
+  ['need','needs','needed','needing','require','requires','required','requiring'],
+  ['start','starts','started','starting','begin','begins','began','beginning'],
+  ['give','gives','gave','giving','provide','provides','provided','providing'],
+  ['get','gets','got','getting','obtain','obtains','obtained','obtaining'],
+  ['buy','buys','bought','buying','purchase','purchases','purchased','purchasing'],
+  ['try','tries','tried','trying','attempt','attempts','attempted','attempting'],
+  ['ask','asks','asked','asking','request','requests','requested','requesting'],
+  ['find','finds','found','finding','discover','discovers','discovered','discovering'],
+  ['keep','keeps','kept','keeping','retain','retains','retained','retaining'],
+  ['build','builds','built','building','construct','constructs','constructed','constructing'],
+  ['choose','chooses','chose','choosing','select','selects','selected','selecting'],
+  ['end','ends','ended','ending','finish','finishes','finished','finishing'],
+  ['allow','allows','allowed','allowing','permit','permits','permitted','permitting'],
+  ['improve','improves','improved','improving','enhance','enhances','enhanced','enhancing'],
+  ['check','checks','checked','checking','verify','verifies','verified','verifying'],
+  ['change','changes','changed','changing','modify','modifies','modified','modifying']
+];
+const PARA_WORDS = {
+  important:'essential', big:'large', bigger:'larger', biggest:'largest', small:'little',
+  fast:'quick', faster:'quicker', fastest:'quickest', easy:'simple', easier:'simpler', easiest:'simplest',
+  difficult:'challenging', main:'primary', sure:'certain', huge:'enormous', smart:'clever',
+  cheap:'affordable', expensive:'costly', famous:'well-known', great:'excellent',
+  result:'outcome', results:'outcomes', problem:'issue', problems:'issues',
+  idea:'concept', ideas:'concepts', way:'method', ways:'methods', tiny:'very small'
+};
+const PARA_TYPOS = { teh:'the', recieve:'receive', adress:'address', seperate:'separate', definately:'definitely', occured:'occurred', goverment:'government', enviroment:'environment', neccessary:'necessary', accomodate:'accommodate', existance:'existence', independant:'independent' };
+const PARA_DET = new Set('the,a,an,this,that,these,those,my,your,his,her,its,our,their,some,any,no,much,many,few,several,each,every,another'.split(','));
+const PARA_PREV_VERB_OK = new Set('to,will,can,could,shall,should,would,may,might,must,i,you,we,they,he,she,it,me,him,her,us,them,do,does,did,please'.split(','));
+const PARA_PARTICLES = new Set('up,out,off,on,in,back,over,down,away,along,through,across,around,together,apart'.split(','));
 function paraphrase(){
-  const text = $('p-text').value.trim();
-  if(!text){ out('p-out', '<p>Please paste some text.</p>'); return; }
-  let para = text;
-  Object.keys(SYN).forEach(w => {
-    const re = new RegExp('\\b' + w + '\\b', 'gi');
-    para = para.replace(re, m => {
-      const opts = SYN[w.toLowerCase()];
-      const choice = opts[Math.floor(Math.random() * opts.length)];
-      return m[0] === m[0].toUpperCase() ? choice[0].toUpperCase() + choice.slice(1) : choice;
+  const raw = $('p-text').value.trim();
+  if(!raw){ out('p-out', '<p>Please paste some text.</p>'); return; }
+  const fixed = [];
+  let text = ' ' + raw.replace(/\s+/g, ' ') + ' ';
+  // layer 0: safe typo + "could of" fixes (same meaning, strictly more correct)
+  Object.keys(PARA_TYPOS).forEach(t => {
+    const re = new RegExp('\\b' + t + '\\b', 'gi');
+    if(re.test(text)){ text = text.replace(re, m => m[0] === m[0].toUpperCase() ? PARA_TYPOS[t][0].toUpperCase() + PARA_TYPOS[t].slice(1) : PARA_TYPOS[t]); fixed.push(`"${t}" → "${PARA_TYPOS[t]}"`); }
+  });
+  text = text.replace(/\b(could|should|would|must)\s+of\b/gi, (m, a) => { fixed.push(`"${a.toLowerCase()} of" → "${a.toLowerCase()} have"`); return a + ' have'; });
+  text = text.replace(/(^|[.!?]\s+)i\s/g, (m, a) => a + 'I ');
+  // layer 1: phrases, protected by placeholders so the word layer cannot re-touch them
+  const held = [];
+  PARA_PHRASES.forEach(([from, to]) => {
+    const re = new RegExp('\\b' + from.replace(/ /g, '\\s+') + '\\b', 'gi');
+    text = text.replace(re, m => {
+      const rep = m[0] === m[0].toUpperCase() ? to[0].toUpperCase() + to.slice(1) : to;
+      held.push(rep);
+      return '\u0001' + (held.length - 1) + '\u0002';
     });
   });
+  // layer 2 + 3: token-by-token with context guards
+  const verbMap = {};
+  PARA_VERBS.forEach(f => { for(let i = 0; i < 4; i++) verbMap[f[i]] = f[i + 4]; });
+  const tokens = text.split(/(\b[\w']+\b)/); // words at odd indexes
+  const wordAt = i => (tokens[i] || '').toLowerCase();
+  for(let i = 1; i < tokens.length; i += 2){
+    const tok = tokens[i], low = tok.toLowerCase();
+    const prev = wordAt(i - 2), next = wordAt(i + 2);
+    if(/^[A-Z]/.test(tok) && prev && !/[.!?]/.test(tokens[i - 1])) continue; // mid-sentence capital = name, leave it
+    let rep = null;
+    if(verbMap[low]){
+      const baseForm = PARA_VERBS.some(f => f[0] === low);
+      const nounContext = PARA_DET.has(prev) || next === 'of';
+      const phrasal = PARA_PARTICLES.has(next) || ((low === 'get' || low === 'gets' || low === 'got') && next === 'to');
+      if(baseForm){
+        const startsSentence = i < 3 || /[.!?]\s*$/.test(tokens.slice(0, i).join(''));
+        if(!nounContext && !phrasal && (PARA_PREV_VERB_OK.has(prev) || startsSentence || /s$/.test(prev))) rep = verbMap[low];
+      } else if(!nounContext && !phrasal) rep = verbMap[low];
+    } else if(PARA_WORDS[low] && !PARA_DET.has(low)) rep = PARA_WORDS[low];
+    if(rep) tokens[i] = /^[A-Z]/.test(tok) ? rep[0].toUpperCase() + rep.slice(1) : rep;
+  }
+  text = tokens.join('');
+  held.forEach((rep, i) => { text = text.split('\u0001' + i + '\u0002').join(rep); });
+  text = text.trim().replace(/\s+([,.!?;:])/g, '$1');
+  text = text.replace(/(^\s*[a-z])|([.!?]\s+[a-z])/g, m => m.toUpperCase());
   const issues = [];
-  if(/\s{2,}/.test(text)) issues.push('Double spaces found — cleaned up.');
-  if(/\b(\w+)\s+\1\b/i.test(text)) issues.push('A repeated word was found — check it.');
-  if(/\bteh\b/i.test(text)) issues.push('"teh" looks like a typo for "the".');
-  if(/\brecieve\b/i.test(text)) issues.push('"recieve" looks like a typo for "receive".');
-  if(!/[.!?]$/.test(text.trim())) issues.push('The text does not end with a full stop.');
-  if(/\bi\b/.test(text)) issues.push('Standalone "i" should be capital "I".');
-  out('p-out', 'PARAPHRASED\n' + para + '\n\nGRAMMAR NOTES\n' + (issues.length ? issues.map(i => '• ' + i).join('\n') : '• No common issues found.'));
+  if(/\s{2,}/.test(raw)) issues.push('Double spaces found — cleaned up.');
+  if(/\b(\w+)\s+\1\b/i.test(raw)) issues.push('A repeated word was found — check it.');
+  if(!/[.!?]$/.test(raw)) issues.push('The text does not end with a full stop.');
+  if(/\bi\b/.test(raw)) issues.push('Standalone "i" was capitalised to "I".');
+  fixed.forEach(f => issues.push('Fixed: ' + f + '.'));
+  out('p-out', 'PARAPHRASED\n' + text + '\n\nGRAMMAR NOTES\n' + (issues.length ? issues.map(i => '• ' + i).join('\n') : '• No common issues found.'));
 }
 
 /* ---------- 9. LinkedIn Headline + Bio Generator ---------- */
@@ -194,21 +285,27 @@ function buildInsta(){
 
 /* ---------- 11. Business Name + Slogan Generator ---------- */
 function buildBiz(){
-  const kw = $('b-kw').value.trim(), style = $('b-style').value;
+  const kw = $('b-kw').value.trim(), style = $('b-style').value || 'Modern';
   if(!kw){ out('b-out', '<p>Please enter a keyword for your business.</p>'); return; }
-  const pre = ['Bright','Prime','True','Nova','Swift','Golden','Urban','Ever'];
-  const suf = ['Studio','Lab','Works','Hub','Co','Nest','Lane','Craft'];
-  const names = [];
-  pre.slice(0,4).forEach(p => names.push(p + ' ' + kw));
-  suf.slice(0,4).forEach(s => names.push(kw + ' ' + s));
-  const slogans = [
-    `${kw}, done right.`,
-    `Simple ${kw.toLowerCase()} for busy people.`,
-    `Where ${kw.toLowerCase()} meets quality.`,
-    `${kw} that works as hard as you do.`,
-    `Less fuss. Better ${kw.toLowerCase()}.`
-  ];
-  out('b-out', 'BUSINESS NAMES\n' + names.map((n,i) => `${i+1}. ${n}`).join('\n') + '\n\nSLOGANS\n' + slogans.map((s,i) => `${i+1}. ${s}`).join('\n'));
+  const K = kw[0].toUpperCase() + kw.slice(1);          // capitalised keyword
+  const KJ = K.replace(/\s+/g, '');                      // joined form, e.g. CoffeeShop
+  const low = kw.toLowerCase();
+  const sets = {
+    Modern: {
+      names: [`Nova ${K}`, `Swift ${K}`, `Prime ${K}`, `${KJ}Lab`, `${KJ}Hub`, `Urban${KJ}`, `${K} Works`, `Lumen ${K}`],
+      slogans: [`${K}, engineered for busy people.`, `Less noise. More ${low}.`, `${K} at the speed of now.`, `Smart ${low}, zero friction.`, `Built for what's next in ${low}.`]
+    },
+    Classic: {
+      names: [`Golden ${K}`, `Heritage ${K}`, `${K} & Co.`, `House of ${K}`, `Royal ${K}`, `The ${K} House`, `Sterling ${K}`, `${K} Co.`],
+      slogans: [`${K}, done right since day one.`, `Trusted hands. Honest ${low}.`, `Where ${low} meets quality.`, `The name families recommend for ${low}.`, `Solid ${low}, fairly priced.`]
+    },
+    Playful: {
+      names: [`Happy ${K}`, `Zippy ${K}`, `The ${K} Club`, `${KJ}Pop`, `Jolly ${K}`, `${K} Wagon`, `Sunny ${K}`, `The ${K} Box`],
+      slogans: [`${K} that makes you smile.`, `Seriously fun ${low}.`, `Pop in for the best ${low} in town.`, `Little shop, big ${low} energy.`, `Your happy place for ${low}.`]
+    }
+  };
+  const s = sets[style] || sets.Modern;
+  out('b-out', `BUSINESS NAMES (${style} style)\n` + s.names.map((n,i) => `${i+1}. ${n}`).join('\n') + '\n\nSLOGANS\n' + s.slogans.map((x,i) => `${i+1}. ${x}`).join('\n'));
 }
 
 /* ---------- 12. Freelance Rate Calculator ---------- */
@@ -268,7 +365,7 @@ function buildRE(){
    FILE TOOLS (16–21) — added 2026-11-07
    Everything runs 100% in the visitor's browser. Files are
    never uploaded anywhere. Libraries (pdf-lib, pdf.js, docx,
-   mammoth, html2pdf) are loaded per-page from CDN.
+   mammoth, jspdf) are loaded per-page from CDN.
    ============================================================ */
 function ftKB(bytes){ return (bytes/1024).toFixed(1) + ' KB'; }
 function ftMB(bytes){ return (bytes/1048576).toFixed(2) + ' MB'; }
@@ -467,6 +564,112 @@ async function ftCompressPdf(){
   const input = $('pc-file');
   const file = input.files && input.files[0];
   if (!file){ out.innerHTML = '<p>Please choose a PDF file first.</p>'; return; }
+  const mode = ($('pc-mode') && $('pc-mode').value) || 'smart';
+  if (mode === 'strong') return ftCompressPdfStrong(file, out);
+  return ftCompressPdfSmart(file, out);
+}
+
+/* Smart mode: rebuild the PDF with pdf-lib — strip metadata, recompress the
+   file structure into object streams, and shrink oversized embedded photos.
+   Page content streams are never re-rendered, so text stays 100% selectable
+   and searchable. */
+async function ftCompressPdfSmart(file, out){
+  if (typeof PDFLib === 'undefined'){
+    out.innerHTML = '<p>The PDF library is still loading — check your connection and try again.</p>'; return;
+  }
+  out.innerHTML = '<p>Working — rebuilding your PDF without touching the pages…</p>';
+  try {
+    const { PDFDocument, PDFName, PDFNumber, PDFRawStream } = PDFLib;
+    const doc = await PDFDocument.load(await file.arrayBuffer());
+    // 1) metadata strip
+    try {
+      doc.setTitle(''); doc.setAuthor(''); doc.setSubject(''); doc.setKeywords([]);
+      doc.setProducer(''); doc.setCreator('');
+      doc.catalog.delete(PDFName.of('Metadata'));
+    } catch(e){ /* metadata is best-effort */ }
+    // 2) oversized embedded JPEG photos → downscale + re-encode in place
+    let photos = 0;
+    try {
+      for (const [ref, obj] of doc.context.enumerateIndirectObjects()){
+        try {
+          if (!(obj instanceof PDFRawStream) || !obj.dict || !obj.dict.get) continue;
+          const dict = obj.dict;
+          const sub = dict.get(PDFName.of('Subtype'));
+          if (!sub || sub.toString() !== '/Image') continue;
+          const filt = dict.get(PDFName.of('Filter'));
+          if (!filt || filt.toString().indexOf('DCTDecode') === -1) continue;
+          if (dict.get(PDFName.of('SMask')) || dict.get(PDFName.of('ImageMask'))) continue;
+          const cs = (dict.get(PDFName.of('ColorSpace')) || '').toString();
+          if (cs.indexOf('DeviceRGB') === -1 && cs.indexOf('DeviceGray') === -1) continue;
+          const w = dict.get(PDFName.of('Width')), h = dict.get(PDFName.of('Height'));
+          const W = w && w.asNumber ? w.asNumber() : 0, H = h && h.asNumber ? h.asNumber() : 0;
+          if (!W || !H || Math.max(W, H) <= 1600) continue;
+          const bmp = await createImageBitmap(new Blob([obj.getContents()], { type: 'image/jpeg' }));
+          const sc = 1600 / Math.max(W, H), nw = Math.round(W * sc), nh = Math.round(H * sc);
+          const cv = document.createElement('canvas'); cv.width = nw; cv.height = nh;
+          cv.getContext('2d').drawImage(bmp, 0, 0, nw, nh);
+          if (bmp.close) bmp.close();
+          const jpg = await ftCanvasBlob(cv, 'image/jpeg', 0.72);
+          const bytes = new Uint8Array(await jpg.arrayBuffer());
+          dict.set(PDFName.of('Width'), PDFNumber.of(nw));
+          dict.set(PDFName.of('Height'), PDFNumber.of(nh));
+          dict.set(PDFName.of('Length'), PDFNumber.of(bytes.length));
+          dict.set(PDFName.of('ColorSpace'), PDFName.of(cs.indexOf('DeviceGray') !== -1 ? 'DeviceGray' : 'DeviceRGB'));
+          dict.set(PDFName.of('BitsPerComponent'), PDFNumber.of(8));
+          doc.context.assign(ref, PDFRawStream.of(dict, bytes));
+          photos++;
+        } catch(e){ /* one bad image never blocks the rest */ }
+      }
+    } catch(e){ /* image pass is best-effort */ }
+    // 2b) recompress page content streams that were stored uncompressed
+    // (common in older generators) — same bytes afterwards, just flate-packed,
+    // so the text layer is untouched.
+    let streamsPacked = 0;
+    try {
+      const seen = new Set();
+      doc.getPages().forEach(pg => {
+        const c = pg.node.get(PDFName.of('Contents'));
+        if (!c) return;
+        const refs = [];
+        if (c instanceof PDFLib.PDFRef) refs.push(c);
+        else if (c && c.asArray) c.asArray().forEach(r => { if (r instanceof PDFLib.PDFRef) refs.push(r); });
+        refs.forEach(ref => {
+          if (seen.has(ref.toString())) return;
+          seen.add(ref.toString());
+          try {
+            const obj = doc.context.lookup(ref);
+            if (!(obj instanceof PDFRawStream) || obj.dict.get(PDFName.of('Filter'))) return;
+            const raw = obj.getContents();
+            if (!raw || raw.length < 200) return;
+            doc.context.assign(ref, doc.context.flateStream(raw, {}));
+            streamsPacked++;
+          } catch(e){ /* leave this stream as it was */ }
+        });
+      });
+    } catch(e){ /* stream pass is best-effort */ }
+    // 3) save with object streams (recompressed structure)
+    const bytes = await doc.save({ useObjectStreams: true });
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const name = ftBase(file.name) + '-compressed.pdf';
+    window.__ftLastBlob = blob; window.__ftLastName = name;
+    const saved = file.size - blob.size;
+    if (saved <= 0){
+      out.innerHTML = '<p><strong>Honest result:</strong> the Smart rebuild came out at ' + ftSize(blob.size) + ' — no smaller than your original (' + ftSize(file.size) + '). Your file was already efficiently made, and Smart mode will not damage text just to force a smaller number. If this is a scanned or photo-heavy PDF and size matters more than selectable text, use <strong>Strong</strong> mode instead.</p>';
+      return;
+    }
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftSize(file.size) + ' → <strong>' + ftSize(blob.size) + '</strong> (' + Math.round(saved / file.size * 100) + '% smaller, ' + doc.getPageCount() + ' pages, Smart mode' + (photos ? ' — ' + photos + ' oversized photo(s) shrunk' : '') + (streamsPacked ? ' — ' + streamsPacked + ' uncompressed page stream(s) packed' : '') + '). <strong>Your text is still fully selectable and searchable</strong> — the pages were never re-rendered.</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download ' + name;
+    btn.onclick = () => ftDownload(blob, name);
+    out.appendChild(btn);
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + ' — the file may be damaged or password-protected.</p>';
+  }
+}
+
+/* Strong mode: re-render every page as a JPEG picture (the old behaviour).
+   Smallest results for scans — but text becomes part of the picture. */
+async function ftCompressPdfStrong(file, out){
   if (typeof pdfjsLib === 'undefined' || typeof window.jspdf === 'undefined'){
     out.innerHTML = '<p>The PDF libraries are still loading — check your connection and try again.</p>'; return;
   }
@@ -620,7 +823,7 @@ async function ftPdfToWord(){
       return imgs;
     }
 
-    let totalChars = 0, totalImages = 0;
+    let totalChars = 0, totalImages = 0, tablesMade = 0;
     const bodyChildren = [];
     let headerParas = null, footerParas = null, docHasHeader = false, docHasFooter = false;
 
@@ -646,7 +849,7 @@ async function ftPdfToWord(){
         for (const L of rawLines){ if (Math.abs(L.y - y) <= 2){ line = L; break; } }
         if (!line){ line = { y, runs: [], x0: it.transform[4], x1: it.transform[4] + (it.width || 0), size: 0 }; rawLines.push(line); }
         const fam = fnames[it.fontName] || '';
-        line.runs.push({ text: it.str, bold: /bold/i.test(fam), ital: /italic|oblique/i.test(fam), size: sizeOf(it) });
+        line.runs.push({ text: it.str, bold: /bold/i.test(fam), ital: /italic|oblique/i.test(fam), size: sizeOf(it), x: it.transform[4], w: it.width || 0 });
         line.x0 = Math.min(line.x0, it.transform[4]);
         line.x1 = Math.max(line.x1, it.transform[4] + (it.width || 0));
         line.size = Math.max(line.size, sizeOf(it));
@@ -712,6 +915,66 @@ async function ftPdfToWord(){
       const freq = {}; bodyLines.forEach(L => { const s = Math.round(L.size); freq[s] = (freq[s] || 0) + L.text.length; });
       let bodySize = 12, best = -1; Object.keys(freq).forEach(s => { if (freq[s] > best){ best = freq[s]; bodySize = +s; } });
 
+      /* Table detection: a run of consecutive lines whose runs start at the
+         same x positions (columns) becomes a real Word table. Conservative on
+         purpose — a group needs >= 3 lines with >= 2 shared columns (>= 2
+         lines when there are >= 3 columns), consistent column starts, and no
+         heading-sized lines, so justified paragraphs are not misread. */
+      const skipLines = new Set();
+      const tableAt = new Map();
+      {
+        const segsOf = L => {
+          // whitespace-only runs are pdf.js gap fillers between cells — they
+          // span the very gaps that separate columns, so they must not count
+          const rs = L.runs.filter(r => r.text && r.text.trim()).slice().sort((a, b) => (a.x || 0) - (b.x || 0));
+          const segs = []; let cur = null;
+          rs.forEach(r => {
+            const rx = r.x || 0;
+            if (cur && rx - cur.x1 > 13){ segs.push(cur); cur = null; }
+            if (!cur) cur = { x0: rx, x1: rx + (r.w || 0), runs: [r] };
+            else { cur.runs.push(r); cur.x1 = Math.max(cur.x1, rx + (r.w || 0)); }
+          });
+          if (cur) segs.push(cur);
+          return segs;
+        };
+        const segListsAll = bodyLines.map(segsOf);
+        let gi = 0;
+        while (gi < bodyLines.length){
+          if (segListsAll[gi].length < 2){ gi++; continue; } // a table can only start at a tabular line
+          const group = [bodyLines[gi]]; const segLists = [segListsAll[gi]]; let gj = gi + 1;
+          while (gj < bodyLines.length && segListsAll[gj].length >= 2){
+            const Lp = group[group.length - 1], Lc = bodyLines[gj];
+            if ((Lp.y - Lc.y) <= Math.max(Lp.size, Lc.size) * 2.6){ group.push(Lc); segLists.push(segListsAll[gj]); gj++; } else break;
+          }
+          let consumed = false;
+          if (group.length >= 2 && !group.some(L => L.size > bodySize * 1.22)){
+            {
+              const starts = [];
+              segLists.forEach(sg => sg.forEach(s2 => starts.push(s2.x0)));
+              starts.sort((a, b) => a - b);
+              const clusters = [];
+              starts.forEach(x => { const c = clusters[clusters.length - 1]; if (c && x - c.max <= 10){ c.max = x; c.sum += x; c.n++; } else clusters.push({ min: x, max: x, sum: x, n: 1 }); });
+              const centers = clusters.map(c => c.sum / c.n);
+              if ((centers.length >= 2 && group.length >= 3) || (centers.length >= 3 && group.length >= 2)){
+                const colOf = x0 => { let bi = 0, bd = 1e9; centers.forEach((c, ci) => { const d = Math.abs(x0 - c); if (d < bd){ bd = d; bi = ci; } }); return bi; };
+                if (segLists.every(sg => new Set(sg.map(s2 => colOf(s2.x0))).size >= 2)){
+                  const rows = segLists.map(sg => {
+                    const cells = centers.map(() => []);
+                    sg.forEach(s2 => { s2.runs.forEach(r => cells[colOf(s2.x0)].push(r)); });
+                    return cells;
+                  });
+                  tableAt.set(group[0], rows);
+                  group.slice(1).forEach(L => skipLines.add(L));
+                  group.forEach(L => { totalChars += L.text.length; });
+                  consumed = true;
+                }
+              }
+            }
+          }
+          gi = consumed ? gj : gi + 1;
+        }
+      }
+
       const els = [];
       bodyLines.forEach(L => els.push({ kind: 'line', y: L.y, L }));
       bodyImgs.forEach(im => els.push({ kind: 'img', y: im.yTop, im }));
@@ -722,6 +985,30 @@ async function ftPdfToWord(){
       const flush = () => { if (cur && cur.runs.length){ bodyChildren.push(new docx.Paragraph({ children: cur.runs })); } cur = null; };
 
       for (const el of els){
+        if (el.kind === 'line' && skipLines.has(el.L)){ prev = el; continue; }
+        if (el.kind === 'line' && tableAt.has(el.L)){
+          flush();
+          const bd = { style: docx.BorderStyle.SINGLE, size: 4, color: '999999' };
+          const cellRuns = runs => {
+            const arr = []; let prevEndsSpace = true;
+            runs.forEach(r => {
+              let t = r.text;
+              if (!prevEndsSpace && t && !/^\s/.test(t)) t = ' ' + t;
+              prevEndsSpace = /\s$/.test(t) || t === '';
+              arr.push(new docx.TextRun({ text: t, bold: r.bold || undefined, italics: r.ital || undefined }));
+            });
+            return arr;
+          };
+          bodyChildren.push(new docx.Table({
+            borders: { top: bd, left: bd, bottom: bd, right: bd, insideHorizontal: bd, insideVertical: bd },
+            width: { size: 100, type: docx.WidthType.PERCENTAGE },
+            rows: tableAt.get(el.L).map(cells => new docx.TableRow({
+              children: cells.map(cell => new docx.TableCell({ children: [new docx.Paragraph({ children: cellRuns(cell) })] }))
+            }))
+          }));
+          tablesMade++;
+          prev = el; continue;
+        }
         if (el.kind === 'img'){
           flush();
           const wPx = Math.min(620, Math.max(24, Math.round(el.im.wPt * 4 / 3)));
@@ -780,7 +1067,7 @@ async function ftPdfToWord(){
     const doc = new docx.Document({ sections: [section] });
     const blob = await docx.Packer.toBlob(doc);
     const name = ftBase(file.name) + '.docx';
-    out.innerHTML = '<p><strong>Done.</strong> Converted about ' + totalChars.toLocaleString() + ' characters' + (totalImages ? ' and ' + totalImages + ' image(s)' : '') + ' from ' + pdf.numPages + ' page(s) into a Word file (' + ftSize(blob.size) + '). Headings, bold text, alignment, headers/footers and images are carried over where the PDF has them; the exact layout, columns and table borders are not.</p>';
+    out.innerHTML = '<p><strong>Done.</strong> Converted about ' + totalChars.toLocaleString() + ' characters' + (totalImages ? ' and ' + totalImages + ' image(s)' : '') + (tablesMade ? ' and ' + tablesMade + ' table(s)' : '') + ' from ' + pdf.numPages + ' page(s) into a Word file (' + ftSize(blob.size) + '). Headings, bold text, alignment, headers/footers and images are carried over where the PDF has them, and tables whose columns line up cleanly are rebuilt as real Word tables; the exact layout and spacing are not preserved.</p>';
     const btn = document.createElement('button');
     btn.className = 'btn'; btn.textContent = 'Download ' + name;
     btn.onclick = () => ftDownload(blob, name);
@@ -800,25 +1087,178 @@ async function ftWordToPdf(){
   if (!/\.docx$/i.test(file.name)){
     out.innerHTML = '<p>This tool reads <strong>.docx</strong> files (Word 2007 and later). Old .doc files need to be saved as .docx first — in Word or Google Docs: File → Save as → Word (.docx).</p>'; return;
   }
-  if (typeof mammoth === 'undefined' || typeof html2pdf === 'undefined'){
+  if (typeof mammoth === 'undefined' || typeof window.jspdf === 'undefined'){
     out.innerHTML = '<p>The conversion libraries are still loading — check your connection and try again.</p>'; return;
   }
   out.innerHTML = '<p>Working — converting your document…</p>';
   try {
     const result = await mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+    const html = result.value || '';
     const holder = $('wp-render');
-    holder.innerHTML = result.value || '<p>(The document appears to be empty.)</p>';
+    if (holder) holder.innerHTML = html || '<p>(The document appears to be empty.)</p>';
+
+    /* Text-based layout: the words are drawn as real PDF text (jsPDF text
+       objects), so the result is selectable, copyable and searchable —
+       not a photograph of the page. */
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    const PAGE_W = 210, PAGE_H = 297, M = 18, MAXW = PAGE_W - 2 * M, BOTTOM = PAGE_H - M;
+    const PT = 25.4 / 72;
+    let y = 20;
+    const lh = size => size * PT * 1.5;
+    const ensure = space => { if (y + space > BOTTOM){ pdf.addPage(); y = 20; } };
+    function setStyle(size, b, i){
+      pdf.setFont('helvetica', b && i ? 'bolditalic' : b ? 'bold' : i ? 'italic' : 'normal');
+      pdf.setFontSize(size);
+    }
+    function wrapRuns(runs, size, maxW){
+      const words = [];
+      runs.forEach(r => {
+        if (r.br){ words.push({ br: true }); return; }
+        if (!r.t) return;
+        r.t.replace(/\s+/g, ' ').split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          words.push(/^\s+$/.test(part) ? { space: true } : { t: part, b: r.b, i: r.i });
+        });
+      });
+      const lines = []; let cur = [], curW = 0;
+      const pushLine = () => { while (cur.length && cur[cur.length - 1].space) cur.pop(); if (cur.length) lines.push(cur); cur = []; curW = 0; };
+      words.forEach(w => {
+        if (w.br){ pushLine(); return; }
+        if (w.space){ if (cur.length){ setStyle(size, false, false); cur.push(w); curW += pdf.getTextWidth(' '); } return; }
+        setStyle(size, w.b, w.i);
+        const ww = pdf.getTextWidth(w.t);
+        if (cur.length && curW + ww > maxW) pushLine();
+        cur.push(w); curW += ww;
+      });
+      pushLine();
+      return lines;
+    }
+    function drawBlock(runs, size, o){
+      o = o || {};
+      const indent = o.indent || 0, hang = o.hang || 0;
+      y += (o.before || 0);
+      const lines = wrapRuns(runs, size, MAXW - indent - hang);
+      lines.forEach((line, li) => {
+        ensure(lh(size));
+        y += size * PT * 1.12;
+        let x = M + indent + (li === 0 ? hang : 0);
+        if (o.bullet && li === 0){ setStyle(size, false, false); pdf.text(o.bullet, M + indent + 0.5, y); }
+        line.forEach(seg => {
+          setStyle(size, seg.b, seg.i);
+          if (seg.space){ x += pdf.getTextWidth(' '); return; }
+          pdf.text(seg.t, x, y);
+          x += pdf.getTextWidth(seg.t);
+        });
+        y += lh(size) - size * PT * 1.12;
+      });
+      y += (o.after != null ? o.after : 2.5);
+    }
+    async function drawImage(imgEl){
+      const src = imgEl.getAttribute('src') || '';
+      if (!/^data:image\//.test(src)) return;
+      const dims = await new Promise(res => { const im = new Image(); im.onload = () => res({ w: im.naturalWidth, h: im.naturalHeight }); im.onerror = () => res(null); im.src = src; });
+      if (!dims || !dims.w) return;
+      let w = Math.min(MAXW, dims.w * 25.4 / 96), h = w * dims.h / dims.w;
+      if (h > BOTTOM - 22){ h = BOTTOM - 22; w = h * dims.w / dims.h; }
+      ensure(h + 2);
+      try { pdf.addImage(src, /png/i.test(src.slice(0, 24)) ? 'PNG' : 'JPEG', M, y, w, h); } catch(e){ return; }
+      y += h + 3;
+    }
+    async function drawRunsBlock(runs, size, o){
+      // split at embedded images: text before, image, text after
+      let buf = [];
+      for (const r of runs){
+        if (r.img){ if (buf.length){ drawBlock(buf, size, o); buf = []; } await drawImage(r.img); }
+        else buf.push(r);
+      }
+      if (buf.length) drawBlock(buf, size, o);
+    }
+    function runsOf(node, b, i){
+      const arr = [];
+      node.childNodes.forEach(ch => {
+        if (ch.nodeType === 3){ if (ch.textContent) arr.push({ t: ch.textContent, b: !!b, i: !!i }); }
+        else if (ch.nodeType === 1){
+          const tag = ch.tagName;
+          if (tag === 'BR') arr.push({ br: true });
+          else if (tag === 'IMG') arr.push({ img: ch });
+          else runsOf(ch, b || tag === 'STRONG' || tag === 'B', i || tag === 'EM' || tag === 'I').forEach(r => arr.push(r));
+        }
+      });
+      return arr;
+    }
+    function drawTable(tbl){
+      const rows = Array.from(tbl.querySelectorAll('tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td,th')).map(td => ({ runs: runsOf(td), header: td.tagName === 'TH' })));
+      if (!rows.length) return;
+      const ncols = Math.max.apply(null, rows.map(r => r.length).concat([1]));
+      const colW = MAXW / ncols, size = 10;
+      rows.forEach(cells => {
+        const wrapped = [];
+        for (let c = 0; c < ncols; c++){
+          const cell = cells[c];
+          const runs = cell ? cell.runs.filter(r => r.t).map(r => ({ t: r.t, b: r.b || cell.header, i: r.i })) : [];
+          wrapped.push(wrapRuns(runs, size, colW - 3));
+        }
+        const nLines = Math.max.apply(null, wrapped.map(w => w.length).concat([1]));
+        const rowH = nLines * lh(size) + 2;
+        ensure(rowH);
+        const top = y;
+        pdf.setDrawColor(150); pdf.setLineWidth(0.2);
+        for (let c = 0; c < ncols; c++){
+          const x0 = M + c * colW;
+          pdf.rect(x0, top, colW, rowH);
+          wrapped[c].forEach((line, li) => {
+            let x = x0 + 1.5;
+            const base = top + 1 + size * PT * 1.12 + li * lh(size);
+            line.forEach(seg => {
+              setStyle(size, seg.b, seg.i);
+              if (seg.space){ x += pdf.getTextWidth(' '); return; }
+              pdf.text(seg.t, x, base);
+              x += pdf.getTextWidth(seg.t);
+            });
+          });
+        }
+        y = top + rowH;
+      });
+      y += 3;
+    }
+    async function renderBlocks(container){
+      for (const node of Array.from(container.childNodes)){
+        if (node.nodeType === 3){ const t = node.textContent.trim(); if (t) drawBlock([{ t }], 11.5, {}); continue; }
+        if (node.nodeType !== 1) continue;
+        const tag = node.tagName;
+        if (/^H[1-6]$/.test(tag)){
+          const lvl = +tag[1], size = [20, 16, 14, 12.5, 11.5, 11][lvl - 1];
+          await drawRunsBlock(runsOf(node).map(r => r.img || r.br ? r : { t: r.t, b: true, i: r.i }), size, { before: lvl <= 2 ? 5 : 4, after: 2.5 });
+        }
+        else if (tag === 'P'){
+          const runs = runsOf(node);
+          if (!runs.some(r => r.img || r.br || (r.t && r.t.trim()))) { y += 2; continue; }
+          await drawRunsBlock(runs, 11.5, {});
+        }
+        else if (tag === 'UL' || tag === 'OL'){
+          let n = 0;
+          node.querySelectorAll(':scope > li').forEach(li => { n++; drawBlock(runsOf(li).filter(r => !r.img), 11.5, { bullet: tag === 'OL' ? n + '.' : '•', indent: 1, hang: 5.5, after: 1 }); });
+          y += 2;
+        }
+        else if (tag === 'TABLE') drawTable(node);
+        else if (tag === 'BLOCKQUOTE') drawBlock(runsOf(node).map(r => r.img || r.br ? r : { t: r.t, b: r.b, i: true }), 11.5, { indent: 8 });
+        else if (tag === 'IMG') await drawImage(node);
+        else if (tag === 'HR'){ ensure(4); pdf.setDrawColor(150); pdf.line(M, y + 1, PAGE_W - M, y + 1); y += 4; }
+        else if (tag === 'DIV' || tag === 'SECTION') await renderBlocks(node);
+        else { const runs = runsOf(node); if (runs.length) await drawRunsBlock(runs, 11.5, {}); }
+      }
+    }
+    const parsed = new DOMParser().parseFromString(html, 'text/html');
+    await renderBlocks(parsed.body);
+    const blob = pdf.output('blob');
     const name = ftBase(file.name) + '.pdf';
-    const opt = {
-      margin: 12,
-      filename: name,
-      image: { type: 'jpeg', quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    };
-    const blob = await html2pdf().set(opt).from(holder).outputPdf('blob');
-    out.innerHTML = '<p><strong>Done.</strong> Your PDF is ready (' + name + ', ' + ftSize(blob.size) + '). Formatting stays close to the original for normal documents; complex tables, text boxes and exact page breaks can differ.</p>';
+    const plain = (parsed.body.textContent || '').replace(/\s/g, '');
+    const nonLatin = (plain.match(/[^\u0000-\u024F]/g) || []).length;
+    let note = 'The text in this PDF is <strong>real text — selectable, copyable and searchable</strong>, laid out on A4 pages. Exact fonts, spacing and page breaks from Word are approximated, not copied pixel-for-pixel.';
+    if (plain.length > 50 && nonLatin / plain.length > 0.05) note += '<br><strong>Note:</strong> this document uses a non-Latin script (such as Urdu, Arabic or Chinese). The built-in PDF font cannot draw those characters, so they may come out blank or wrong — for such documents, export the PDF from Word or Google Docs instead.';
+    out.innerHTML = '<p><strong>Done.</strong> Your PDF is ready (' + name + ', ' + ftSize(blob.size) + ', ' + pdf.getNumberOfPages() + ' page(s)). ' + note + '</p>';
     const btn = document.createElement('button');
     btn.className = 'btn'; btn.textContent = 'Download ' + name;
     btn.onclick = () => ftDownload(blob, name);
@@ -972,11 +1412,34 @@ let ftI2pFiles = [];
 function ftI2pPick(input){
   Array.from(input.files || []).forEach(f => { if (/^image\//.test(f.type)) ftI2pFiles.push(f); });
   input.value = '';
-  const info = $('ip-info');
-  info.innerHTML = ftI2pFiles.length
-    ? ftI2pFiles.map((f, i) => (i + 1) + '. ' + esc(f.name) + ' (' + ftSize(f.size) + ')').join('<br>')
-    : '';
   $('ip-out').innerHTML = '';
+  ftI2pRender();
+}
+function ftI2pRender(){
+  const list = $('ip-list'), info = $('ip-info');
+  if (!list) return;
+  if (!ftI2pFiles.length){ list.innerHTML = ''; info.textContent = ''; return; }
+  list.innerHTML = ftI2pFiles.map((f, i) =>
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #e5e5e5">' +
+    '<span>' + (i + 1) + '. ' + esc(f.name) + ' (' + ftSize(f.size) + ')</span>' +
+    '<span style="white-space:nowrap">' +
+    '<button type="button" class="btn secondary" onclick="ftI2pMove(' + i + ',-1)"' + (i === 0 ? ' disabled' : '') + '>↑ Up</button> ' +
+    '<button type="button" class="btn secondary" onclick="ftI2pMove(' + i + ',1)"' + (i === ftI2pFiles.length - 1 ? ' disabled' : '') + '>↓ Down</button> ' +
+    '<button type="button" class="btn secondary" onclick="ftI2pRemove(' + i + ')">Remove</button>' +
+    '</span></div>').join('');
+  info.textContent = ftI2pFiles.length + ' image(s) selected — the PDF follows this order, top first.';
+}
+function ftI2pMove(i, d){
+  const j = i + d;
+  if (j < 0 || j >= ftI2pFiles.length) return;
+  const t = ftI2pFiles[i]; ftI2pFiles[i] = ftI2pFiles[j]; ftI2pFiles[j] = t;
+  $('ip-out').innerHTML = '';
+  ftI2pRender();
+}
+function ftI2pRemove(i){
+  ftI2pFiles.splice(i, 1);
+  $('ip-out').innerHTML = '';
+  ftI2pRender();
 }
 async function ftImagesToPdf(){
   const out = $('ip-out');
@@ -985,19 +1448,36 @@ async function ftImagesToPdf(){
   out.innerHTML = '<p>Working…</p>';
   try {
     const { jsPDF } = window.jspdf;
+    const sizeSel = ($('ip-size') && $('ip-size').value) || 'a4'; // a4 | letter | fit
+    const margin = parseFloat(($('ip-margin') && $('ip-margin').value) || '10') || 0;
+    const pageDims = { a4: [210, 297], letter: [215.9, 279.4] }[sizeSel] || null;
     let doc = null;
     for (const f of ftI2pFiles){
       const { img, url } = await ftLoadImage(f);
-      const wMm = img.naturalWidth * 25.4 / 96, hMm = img.naturalHeight * 25.4 / 96;
-      const orient = wMm > hMm ? 'landscape' : 'portrait';
-      if (!doc) doc = new jsPDF({ unit: 'mm', format: [wMm, hMm], orientation: orient });
-      else doc.addPage([wMm, hMm], orient);
+      const imgW = img.naturalWidth * 25.4 / 96, imgH = img.naturalHeight * 25.4 / 96; // mm at 96 dpi
       const type = f.type === 'image/png' ? 'PNG' : 'JPEG';
-      doc.addImage(img, type, 0, 0, wMm, hMm);
+      if (!pageDims){
+        // Fit mode: each page is exactly its image's size (previous behaviour)
+        const orient = imgW > imgH ? 'landscape' : 'portrait';
+        if (!doc) doc = new jsPDF({ unit: 'mm', format: [imgW, imgH], orientation: orient });
+        else doc.addPage([imgW, imgH], orient);
+        doc.addImage(img, type, 0, 0, imgW, imgH);
+      } else {
+        // Fixed page size: pick orientation from the image, fit inside the margins, centre.
+        const landscape = imgW > imgH;
+        const pw = landscape ? pageDims[1] : pageDims[0], ph = landscape ? pageDims[0] : pageDims[1];
+        if (!doc) doc = new jsPDF({ unit: 'mm', format: pageDims, orientation: landscape ? 'landscape' : 'portrait' });
+        else doc.addPage(pageDims, landscape ? 'landscape' : 'portrait');
+        const availW = Math.max(10, pw - 2 * margin), availH = Math.max(10, ph - 2 * margin);
+        const sc = Math.min(availW / imgW, availH / imgH);
+        const dw = imgW * sc, dh = imgH * sc;
+        doc.addImage(img, type, (pw - dw) / 2, (ph - dh) / 2, dw, dh);
+      }
       URL.revokeObjectURL(url);
     }
     const blob = doc.output('blob');
-    out.innerHTML = '<p><strong>Done.</strong> ' + ftI2pFiles.length + ' image(s) → one PDF (' + ftSize(blob.size) + ').</p>';
+    const sizeName = sizeSel === 'fit' ? 'image-sized pages' : (sizeSel === 'letter' ? 'Letter' : 'A4');
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftI2pFiles.length + ' image(s) → one PDF (' + ftSize(blob.size) + ', ' + sizeName + (pageDims ? ', ' + margin + ' mm margins' : '') + ').</p>';
     const btn = document.createElement('button');
     btn.className = 'btn'; btn.textContent = 'Download images.pdf';
     btn.onclick = () => ftDownload(blob, 'images.pdf');

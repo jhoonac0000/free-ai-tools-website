@@ -98,7 +98,7 @@
 <div class="wrap toolpage">
 <p class="breadcrumb"><a href="../index.html">Tools</a> › <a href="../category/pdf-image-tools.html">PDF &amp; Image Tools</a></p>
 <h1>Word to PDF Converter — .docx to PDF</h1>
-<p class="desc">Turn a Word document into a share-ready PDF. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server. Formatting stays close to the original for normal documents; complex tables, text boxes and exact page breaks can differ.</p><figure><img src="../assets/img/files.svg" alt="Word to PDF — .docx Converter — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Word to PDF — .docx Converter — illustration</figcaption></figure>
+<p class="desc">Turn a Word document into a share-ready PDF. Your file never leaves your device — everything happens in your browser, nothing is uploaded to any server. The PDF carries <strong>real text — selectable, copyable and searchable</strong>, like a PDF exported from Word. The layout is re-drawn on A4 pages, so fonts, spacing and exact page breaks are approximated rather than copied pixel-for-pixel.</p><figure><img src="../assets/img/files.svg" alt="Word to PDF — .docx Converter — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">Word to PDF — .docx Converter — illustration</figcaption></figure>
 <div class="toolbox">
 <label>Choose a Word document (.docx)</label><input id="wp-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
 <button class="btn" onclick="ftWordToPdf()">Convert to PDF</button>
@@ -119,7 +119,7 @@ document.getElementById('wp-file').addEventListener('change', function(){ docume
 <h3>Pro tips</h3>
 <ul>
 <li>Submitting a CV? Convert to PDF and name it “Firstname-Lastname-CV.pdf” — recruiters' systems handle PDFs best.</li>
-<li>If a long document's pages split mid-paragraph, add page breaks in Word before converting; they are respected.</li>
+<li>Page breaks are re-flowed: this converter lays the text out on A4 itself, so breaks can land at a different point than in Word.</li>
 <li>Preview on your phone too — that is the screen most readers will actually use.</li>
 </ul>
 </div>
@@ -127,7 +127,7 @@ document.getElementById('wp-file').addEventListener('change', function(){ docume
 <h2>Frequently asked questions</h2>
 <details><summary>Is my document uploaded anywhere?</summary><p>No. The conversion runs in your browser. Your document never leaves your device.</p></details>
 <details><summary>Why .docx only, not .doc?</summary><p>.doc is an old binary format from the 1990s that browser libraries cannot read reliably. Saving as .docx takes ten seconds in any modern word processor.</p></details>
-<details><summary>Will my formatting be identical?</summary><p>For normal documents — headings, paragraphs, lists, basic tables, images — it stays close. It is not a pixel-perfect copy: unusual fonts, text boxes and complex layouts can shift. Always give the PDF one check before sending something important.</p></details>
+<details><summary>Will my formatting be identical?</summary><p>The words are real, selectable text — that part is exactly like a Word export. The look is close for normal documents (headings, paragraphs, lists, basic tables, images), but it is not a pixel-perfect copy: the text is re-laid-out in a standard font on A4 pages, so unusual fonts, text boxes and complex layouts can shift, and documents in non-Latin scripts (Urdu, Arabic, Chinese) cannot be drawn by the built-in font — export those from Word or Google Docs instead. Always give the PDF one check before sending something important.</p></details>
 <details><summary>Can I convert back to Word afterwards?</summary><p>The PDF is for sharing, not editing. Keep your .docx — and if you ever lose it, our PDF to Word tool can recover the text.</p></details>
 </div>
 <div class="earn">
@@ -148,7 +148,7 @@ document.getElementById('wp-file').addEventListener('change', function(){ docume
 </div>
 <footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>#wp-render h1{font-size:26px}#wp-render table{border-collapse:collapse}#wp-render td,#wp-render th{border:1px solid #999;padding:4px 8px}</style>
 <script src="../assets/tools.js"></script>
 </body>
