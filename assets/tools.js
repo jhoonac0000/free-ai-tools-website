@@ -1612,3 +1612,88 @@ function ftBlurDownload(){
     out.innerHTML = '<p><strong>Done.</strong> Blurred image downloaded (' + ftSize(blob.size) + ').</p>';
   }, 'image/png');
 }
+
+/* ---------- 27. PDF Split (extract ranges / split every page) ---------- */
+let ftSplitState = null;
+async function ftSplitPick(input){
+  const info = $('ps-info'); const out = $('ps-out');
+  const f = (input.files || [])[0];
+  input.value = '';
+  ftSplitState = null;
+  if (!f) return;
+  if (typeof PDFLib === 'undefined'){ info.innerHTML = '<p>The PDF library is still loading — check your connection and try again.</p>'; return; }
+  info.innerHTML = '<p>Reading…</p>';
+  try {
+    const buf = await f.arrayBuffer();
+    const doc = await PDFLib.PDFDocument.load(buf, { ignoreEncryption: true });
+    ftSplitState = { file: f, buf: buf, count: doc.getPageCount() };
+    info.innerHTML = '<p><strong>' + esc(f.name) + '</strong> — ' + ftSplitState.count + ' pages, ' + ftSize(f.size) + '.</p>';
+    out.innerHTML = '';
+  } catch(e){
+    info.innerHTML = '<p>Could not read that PDF: ' + esc(e.message || e) + ' — it may be damaged or password-protected.</p>';
+  }
+}
+function ftSplitParseRanges(text, count){
+  const pages = []; const seen = {};
+  const parts = String(text || '').split(',');
+  for (const raw of parts){
+    const t = raw.trim(); if (!t) continue;
+    const m = t.match(/^(\d+)\s*(?:-\s*(\d+))?$/);
+    if (!m) throw new Error('"' + t + '" is not a valid page or range.');
+    const a = parseInt(m[1], 10); const b = m[2] ? parseInt(m[2], 10) : a;
+    if (a < 1 || b < a || b > count) throw new Error('Pages must be between 1 and ' + count + '.');
+    for (let p = a; p <= b; p++){ if (!seen[p]){ seen[p] = 1; pages.push(p - 1); } }
+  }
+  return pages;
+}
+async function ftSplitExtract(){
+  const out = $('ps-out');
+  if (!ftSplitState){ out.innerHTML = '<p>Please choose a PDF file first.</p>'; return; }
+  let idx;
+  try { idx = ftSplitParseRanges($('ps-ranges').value, ftSplitState.count); }
+  catch(e){ out.innerHTML = '<p>' + esc(e.message) + '</p>'; return; }
+  if (!idx.length){ out.innerHTML = '<p>Type the pages to extract first — for example 1-3, 5, 8-10.</p>'; return; }
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    const src = await PDFLib.PDFDocument.load(ftSplitState.buf, { ignoreEncryption: true });
+    const doc = await PDFLib.PDFDocument.create();
+    const copied = await doc.copyPages(src, idx);
+    copied.forEach(p => doc.addPage(p));
+    const bytes = await doc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const name = ftBase(ftSplitState.file.name) + '-extracted.pdf';
+    out.innerHTML = '<p><strong>Done.</strong> ' + idx.length + ' page' + (idx.length === 1 ? '' : 's') + ' extracted — ' + ftSize(blob.size) + '.</p>';
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.textContent = 'Download ' + name;
+    btn.onclick = () => ftDownload(blob, name);
+    out.appendChild(btn);
+    window.__ftLastBlob = blob; window.__ftLastName = name;
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + '</p>';
+  }
+}
+async function ftSplitAll(){
+  const out = $('ps-out');
+  if (!ftSplitState){ out.innerHTML = '<p>Please choose a PDF file first.</p>'; return; }
+  out.innerHTML = '<p>Working…</p>';
+  try {
+    const src = await PDFLib.PDFDocument.load(ftSplitState.buf, { ignoreEncryption: true });
+    const base = ftBase(ftSplitState.file.name);
+    out.innerHTML = '<p><strong>Done.</strong> ' + ftSplitState.count + ' separate PDFs — one per page:</p>';
+    for (let i = 0; i < ftSplitState.count; i++){
+      const doc = await PDFLib.PDFDocument.create();
+      const copied = await doc.copyPages(src, [i]);
+      doc.addPage(copied[0]);
+      const bytes = await doc.save();
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const name = base + '-page-' + (i + 1) + '.pdf';
+      const btn = document.createElement('button');
+      btn.className = 'btn secondary'; btn.style.margin = '4px 6px 0 0';
+      btn.textContent = 'Page ' + (i + 1) + ' (' + ftSize(blob.size) + ')';
+      btn.onclick = () => ftDownload(blob, name);
+      out.appendChild(btn);
+    }
+  } catch(e){
+    out.innerHTML = '<p>Something went wrong: ' + esc(e.message || e) + '</p>';
+  }
+}

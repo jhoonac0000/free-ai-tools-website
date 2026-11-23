@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free PDF Split — Extract Pages or Split Every Page — ToolNest</title>
+<meta name="description" content="Split a PDF in your browser: extract the pages you need into one PDF, or split every page into its own file. Free, no sign-up, 100% in your browser — files never leave your device.">
+<link rel="canonical" href="https://free-ai-tools-website.pages.dev/tools/pdf-split.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ToolNest">
+<meta property="og:title" content="Free PDF Split — Extract Pages or Split Every Page — ToolNest">
+<meta property="og:description" content="Split a PDF in your browser: extract the pages you need into one PDF, or split every page into its own file. Free, no sign-up, 100% in your browser — files never leave your device.">
+<meta property="og:url" content="https://free-ai-tools-website.pages.dev/tools/pdf-split.html">
+<meta property="og:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free PDF Split — Extract Pages or Split Every Page — ToolNest">
+<meta name="twitter:description" content="Split a PDF in your browser: extract the pages you need into one PDF, or split every page into its own file. Free, no sign-up, 100% in your browser — files never leave your device.">
+<meta name="twitter:image" content="https://free-ai-tools-website.pages.dev/assets/img/free-online-tools-dashboard-illustration.jpg">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://free-ai-tools-website.pages.dev/#website",
+      "name": "ToolNest",
+      "url": "https://free-ai-tools-website.pages.dev/",
+      "description": "28 free online tools that run in your browser: resume builder, invoice generator, PDF and image tools, calculators and generators for work, writing and marketing. Free, no sign-up."
+    },
+    {
+      "@type": "WebApplication",
+      "name": "PDF Split",
+      "url": "https://free-ai-tools-website.pages.dev/tools/pdf-split.html",
+      "description": "Split a PDF in your browser: extract the pages you need into one PDF, or split every page into its own file. Free, no sign-up, 100% in your browser — files never leave your device.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isPartOf": {
+        "@id": "https://free-ai-tools-website.pages.dev/#website"
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my PDF uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The file is read and split inside your browser. Nothing leaves your device and nothing is stored."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I extract pages that are not next to each other?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Type ranges and single pages together, like 1-3, 5, 8-10 — the extracted PDF keeps exactly that order."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split every page into its own PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — use the second button. You get one small download button per page, so you can save only the pages you actually need."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a page or file limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No fixed limit and no sign-up. The only limit is your device's memory — very large scanned books may be slow on older phones."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why did my file fail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is most likely damaged or password-protected. Open it in a PDF reader to check, remove the password if it is yours, and try again."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site"><div class="nav">
+<a class="logo" href="../index.html">Tool<span>Nest</span></a>
+<nav class="navlinks"><a href="../index.html">Tools</a><a href="../learn.html">Learn</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy.html">Privacy</a></nav>
+</div></header>
+<div class="wrap toolpage">
+<p class="breadcrumb"><a href="../index.html">Tools</a> › <a href="../category/pdf-image-tools.html">PDF &amp; Image Tools</a></p>
+<h1>PDF Split — Extract Pages or Split Every Page</h1>
+<p class="desc">Pull the pages you need out of a big PDF — one chapter, one certificate, one statement — or split every page into its own file. Your file never leaves your device: everything happens in your browser, nothing is uploaded to any server.</p><figure><img src="../assets/img/files.svg" alt="PDF Split — Extract Pages or Split Every Page — free tool illustration" style="width:100%;max-width:520px;border-radius:12px;margin:16px 0 0"><figcaption class="note">PDF Split — Extract Pages or Split Every Page — illustration</figcaption></figure>
+<div class="toolbox">
+<label>Choose one PDF file</label><input id="ps-file" type="file" accept="application/pdf,.pdf" onchange="ftSplitPick(this)">
+<div id="ps-info" style="margin-top:10px"><p class="note">No PDF chosen yet.</p></div>
+<label>Pages to extract (for example 1-3, 5, 8-10)</label><input id="ps-ranges" type="text" placeholder="1-3, 5, 8-10">
+<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn" onclick="ftSplitExtract()">Extract pages into one PDF</button>
+<button class="btn secondary" onclick="ftSplitAll()">Split every page into its own PDF</button>
+</div>
+<div class="output" id="ps-out"></div>
+</div>
+<div class="prose">
+<h2>Learn: how to use this well</h2>
+<ol>
+<li><strong>Send only what was asked for.</strong> A portal that asks for your degree does not need your whole 40-page file. Extract that one page — smaller upload, faster approval, less of your private data travelling.</li>
+<li><strong>Split before you compress or email.</strong> A scanned book that is too big to send becomes five small chapter files. Split first, then run the PDF Compressor on the part that is still too large.</li>
+<li><strong>Keep the original untouched.</strong> Splitting never changes your source file. Work on the extracted copy; if you pick the wrong pages, extract again in seconds.</li>
+<li><strong>Name the parts like a filing clerk.</strong> “Statement-Jan-2026.pdf” and “Degree-page.pdf” will still make sense in six months; “split-1.pdf” will not.</li>
+</ol>
+<h3>Pro tips</h3>
+<ul>
+<li>Bank and salary statements: extract only the months a visa or loan officer asked for — the rest is your private business.</li>
+<li>Books and manuals: one chapter per file makes reading on a phone far easier than one 300-page PDF.</li>
+<li>Wrong order in the result? Ranges are extracted in the order you type them, so type 8-10, 1-3 if you want those pages first.</li>
+</ul>
+</div>
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<details><summary>Is my PDF uploaded to a server?</summary><p>No. The file is read and split inside your browser. Nothing leaves your device and nothing is stored.</p></details>
+<details><summary>Can I extract pages that are not next to each other?</summary><p>Yes. Type ranges and single pages together, like 1-3, 5, 8-10 — the extracted PDF keeps exactly that order.</p></details>
+<details><summary>Can I split every page into its own PDF?</summary><p>Yes — use the second button. You get one small download button per page, so you can save only the pages you actually need.</p></details>
+<details><summary>Is there a page or file limit?</summary><p>No fixed limit and no sign-up. The only limit is your device's memory — very large scanned books may be slow on older phones.</p></details>
+<details><summary>Why did my file fail?</summary><p>It is most likely damaged or password-protected. Open it in a PDF reader to check, remove the password if it is yours, and try again.</p></details>
+</div>
+<div class="earn">
+<h2>Earn: how this skill pays</h2>
+<p>Document-preparation work runs on splitting: one page from a transcript for an admission file, three months from a statement for a loan, one chapter from a manual for a client. People who prepare applications, visa files and proposals for others are paid for files that are exactly right — nothing missing, nothing extra. A clean split is the visible difference.</p>
+<p>The free tool above does the full job. No account, no watermark, no upload.</p>
+<a class="cta" href="../learn/resume-that-gets-interviews.html">Read: applications that get replies →</a>
+</div>
+<div class="section">
+<h2>Related tools</h2>
+<div class="grid">
+<a class="card" href="pdf-merge.html"><h3>PDF Merge</h3><p>Join PDFs into one.</p></a>
+<a class="card" href="pdf-compress.html"><h3>PDF Compress</h3><p>Shrink a split file.</p></a>
+<a class="card" href="pdf-to-images.html"><h3>PDF to Images</h3><p>Extract pages as pictures.</p></a>
+</div>
+<p><a href="../index.html">← Back to all tools</a></p>
+</div>
+</div>
+<footer class="site"><div class="foot"><span>© 2026 ToolNest</span><span><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></span></div></footer>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="../assets/tools.js"></script>
+</body>
+</html>

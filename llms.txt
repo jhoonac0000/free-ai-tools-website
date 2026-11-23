@@ -1,6 +1,6 @@
 # ToolNest
 
-> ToolNest offers 27 free online tools that run entirely in the visitor's browser — no sign-up, no uploads to a server, files never leave the device. Tools cover PDF work, image editing, career and business documents, and writing and social media generators. The site also publishes free "Learn" guides on using these tools well.
+> ToolNest offers 28 free online tools that run entirely in the visitor's browser — no sign-up, no uploads to a server, files never leave the device. Tools cover PDF work, image editing, career and business documents, and writing and social media generators. The site also publishes free "Learn" guides on using these tools well.
 
 Site: https://free-ai-tools-website.pages.dev/
 
@@ -10,11 +10,12 @@ Site: https://free-ai-tools-website.pages.dev/
 - [Writing & Content Tools](https://free-ai-tools-website.pages.dev/category/writing-content.html): 4 tools — Say it better, shorter and cleaner.
 - [Marketing & Business Tools](https://free-ai-tools-website.pages.dev/category/marketing-business.html): 6 tools — Sell more, reach more people.
 - [Finance & Billing Tools](https://free-ai-tools-website.pages.dev/category/finance-billing.html): 2 tools — Know your numbers, bill like a pro.
-- [PDF & Image Tools](https://free-ai-tools-website.pages.dev/category/pdf-image-tools.html): 12 tools — Fix files right on your device — nothing is uploaded.
+- [PDF & Image Tools](https://free-ai-tools-website.pages.dev/category/pdf-image-tools.html): 13 tools — Fix files right on your device — nothing is uploaded.
 
 ## PDF Tools
 
 - [PDF Merge](https://free-ai-tools-website.pages.dev/tools/pdf-merge.html): Combine two or more PDF files into a single PDF, in your chosen order.
+- [PDF Split](https://free-ai-tools-website.pages.dev/tools/pdf-split.html): Extract selected pages from a PDF into one file, or split every page into its own PDF.
 - [PDF Compressor](https://free-ai-tools-website.pages.dev/tools/pdf-compress.html): Reduce PDF file size online.
 - [PDF to Word Converter](https://free-ai-tools-website.pages.dev/tools/pdf-to-word.html): Extract editable text from a PDF into a .docx Word document.
 - [Word to PDF Converter](https://free-ai-tools-website.pages.dev/tools/word-to-pdf.html): Convert a .docx Word document to PDF.
